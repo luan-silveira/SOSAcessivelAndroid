@@ -15,13 +15,13 @@ public class DB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE usuario(" +
-                "_id integer primary key autoincrement," +
-                "nome text not null," +
-                "data_nascimento text not null," +
-                "tipo_sanguineo text not null," +
-                "fator_rh_sanguineo text not null," +
-                "endereco text," +
+        db.execSQL("CREATE TABLE IF NOT EXISTS usuario(" +
+                "_id integer primary key autoincrement, " +
+                "nome text not null, " +
+                "data_nascimento text not null, " +
+                "tipo_sanguineo text not null, " +
+                "fator_rh_sanguineo text not null, " +
+                "endereco text, " +
                 "informacoes_medicas text)");
     }
 

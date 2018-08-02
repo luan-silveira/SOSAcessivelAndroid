@@ -7,4 +7,13 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="classificacoes_ocorrencias">
+        <item>Acidentes e traumas</item>
+        <item>Emergências médicas</item>
+        <item>Emergências policiais</item>
+        <item>Resgates/Desastres naturais</item>
+        <item>Risco imediato à vida</item>
+        <item>Outros</item>
+    </string-array>
 </resources>

@@ -17,6 +17,19 @@ public class Usuario {
     private String endereco;
     private String infMedicas;
 
+    public Usuario() {
+    }
+
+    public Usuario(int id, String nome, String dataNascimento, String tipoSanguineo, String rhSanguineo, String endereco, String infMedicas) {
+        this.id = id;
+        this.nome = nome;
+        this.setDataNascimento(dataNascimento);
+        this.setTipoSanguineo(tipoSanguineo);
+        this.setRhSanguineo(rhSanguineo);
+        this.endereco = endereco;
+        this.infMedicas = infMedicas;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -35,6 +48,10 @@ public class Usuario {
 
     public Date getDataNascimento() {
         return dataNascimento;
+    }
+
+    public String getDataNascimentoString() {
+        return new SimpleDateFormat("dd/MM/yyyy").format(dataNascimento);
     }
 
     public void setDataNascimento(Date dataNascimento) {
