@@ -16,4 +16,27 @@
         <item>Risco imediato à vida</item>
         <item>Outros</item>
     </string-array>
+
+    <string-array name="tipo_ocorrencias_1">
+        <item>1 - Agressão/Violência</item>
+        <item>2 - Ferimento por arma branca/arma de fogo</item>
+        <item>3 - Mordida de animal</item>
+        <item>4 - Picada de animais peçonhentos</item>
+        <item>5 - Quedas</item>
+        <item>39 - Acidente de trânsito</item>
+    </string-array>
+
+    <string-array name="tipo_ocorrencias_2">
+        <item>6 - AVC/Derrame</item>
+        <item>7 - Alergia/Reação medicamentosa</item>
+        <item>8 - Convulsões/Epilepsia</item>
+        <item>9 - Psiquiátricos/Tentativa de suicídio</item>
+        <item>10 - Dor abdominal</item>
+        <item>11 - Dor de cabeça</item>
+        <item>12 - Dor nas costas</item>
+        <item>13 - Dor no peito/Problemas cardíacos</item>
+        <item>14 - Envenenamento/Overdose</item>
+        <item>15 - Gravidez/Parto/Aborto</item>
+        <item>16 - Problemas respiratórios</item>
+    </string-array>
 </resources>

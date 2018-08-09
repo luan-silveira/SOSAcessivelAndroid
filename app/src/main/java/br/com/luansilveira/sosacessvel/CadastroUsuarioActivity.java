@@ -9,8 +9,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
+import br.com.luansilveira.sosacessvel.utils.DB;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
@@ -33,6 +36,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         if(retorno == -1){
             Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
         } else {
+            try {
+                (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             abrirTelaInicial();
         }
     }

@@ -23,7 +23,7 @@ public class UsuarioController {
 
         sqlDb = db.getWritableDatabase();
         if(usuario.getId() != null){
-            dados.put("nome", usuario.getId());
+            dados.put("_id", usuario.getId());
         }
         dados.put("nome", usuario.getNome());
         dados.put("data_nascimento", usuario.getDataNascimentoString());
@@ -44,7 +44,7 @@ public class UsuarioController {
 
         sqlDb = db.getWritableDatabase();
         if(usuario.getId() != null){
-            dados.put("nome", usuario.getId());
+            dados.put("_id", usuario.getId());
         }
         dados.put("nome", usuario.getNome());
         dados.put("data_nascimento", usuario.getDataNascimentoString());
@@ -68,7 +68,7 @@ public class UsuarioController {
         sqlDb = db.getReadableDatabase();
 
         Cursor cursor = sqlDb.query("usuario", campos,
-                null, null,null,null,null);
+                where, null,null,null,null);
 
         if (cursor == null) {
             return null;
@@ -118,4 +118,5 @@ public class UsuarioController {
         return resultado;
 
     }
+
 }
