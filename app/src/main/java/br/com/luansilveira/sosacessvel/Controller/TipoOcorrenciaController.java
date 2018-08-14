@@ -107,6 +107,10 @@ public class TipoOcorrenciaController {
 
         sqlDb.close();
 
+        return this.popularTipoOcorrencia(cursor);
+    }
+
+    public TipoOcorrencia popularTipoOcorrencia(Cursor cursor){
         TipoOcorrencia tipo = new TipoOcorrencia();
         tipo.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
         tipo.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));

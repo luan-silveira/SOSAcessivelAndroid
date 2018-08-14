@@ -1,10 +1,14 @@
 package br.com.luansilveira.sosacessvel;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
@@ -40,6 +46,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.solicitarPermissoes();
 
 //        TextView userName = (TextView) navigationView.findViewById(R.id.userName);
 //
@@ -100,5 +108,25 @@ public class MainActivity extends AppCompatActivity
 
     public void novaOcorrenciaClick(View view) {
         startActivity(new Intent(this, OcorrenciaActivity.class));
+    }
+
+    public void solicitarPermissoes(){
+        ArrayList<String> permissoesRequisitar = new ArrayList<>();
+        String[] permissoesRequisitarArray = new String[]{};
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            permissoesRequisitar.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            permissoesRequisitar.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        if (!permissoesRequisitar.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    permissoesRequisitar.toArray(permissoesRequisitarArray), 1);
+        }
     }
 }

@@ -1,29 +1,52 @@
 package br.com.luansilveira.sosacessvel;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import br.com.luansilveira.sosacessvel.Controller.ClassificacaoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.TipoOcorrenciaController;
-import br.com.luansilveira.sosacessvel.Model.ClassificacaoOcorrencia;
+import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
+import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
+import br.com.luansilveira.sosacessvel.Model.Usuario;
 
 public class OcorrenciaActivity extends AppCompatActivity {
 
     Spinner spClassifOcorrencias;
     Spinner spTipoOcorrencias;
+    TextView txtLocalizacao;
+    EditText edDescricaoOcorrencia;
+    EditText edDescricaoLocalizacao;
 
     private ClassificacaoOcorrenciaController classificacaoController;
     private TipoOcorrenciaController tipoController;
+    private UsuarioController usuarioController;
+    private TipoOcorrencia tipoOcorrenciaSelecionado;
+
+    private GoogleMap map;
+    private FusedLocationProviderClient fusedLocation;
+    private Location local;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +62,15 @@ public class OcorrenciaActivity extends AppCompatActivity {
 
         spClassifOcorrencias = findViewById(R.id.classifOcorrencias);
         spTipoOcorrencias = findViewById(R.id.tipoOcorrencias);
+        txtLocalizacao = findViewById(R.id.txtLocalizacao);
+        edDescricaoOcorrencia = findViewById(R.id.edDescricaoOcorrencia);
+        edDescricaoLocalizacao = findViewById(R.id.edDescricaoLocal);
 
         classificacaoController = new ClassificacaoOcorrenciaController(getBaseContext());
         tipoController = new TipoOcorrenciaController(getBaseContext());
+        usuarioController = new UsuarioController(getBaseContext());
 
-        Cursor cursorClassif = classificacaoController.retrieve();
+        final Cursor cursorClassif = classificacaoController.retrieve();
         this.popularSpinner(spClassifOcorrencias, cursorClassif, new String[]{"descricao", "_id"});
 
         spClassifOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -60,6 +87,21 @@ public class OcorrenciaActivity extends AppCompatActivity {
 
             }
         });
+
+        spTipoOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursorTipo = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
+                tipoOcorrenciaSelecionado = tipoController.popularTipoOcorrencia(cursorTipo);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        if(isPermissaoLocalizacao()){getLocalizacao();}
 
     }
 
@@ -80,5 +122,45 @@ public class OcorrenciaActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected boolean isPermissaoLocalizacao(){
+        return ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED));
+    }
+
+    protected void getLocalizacao(){
+        fusedLocation = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            if(this.isPermissaoLocalizacao()){
+                final Task localizacao = fusedLocation.getLastLocation();
+                localizacao.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            local = (Location) task.getResult();
+                            txtLocalizacao.setText("Localização atual: " + String.valueOf(local.getLatitude())
+                                + ", " + String.valueOf(local.getLongitude()));
+                        }
+                    }
+                });
+            }
+
+        } catch (SecurityException e){
+            Log.e("Exception", e.getMessage());
+        }
+    }
+
+    public void solicitarAtendimentoClick(View view) {
+
+        Usuario paciente = usuarioController.getUsuario();
+        String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
+        String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
+        Double latitude = local.getLatitude();
+        Double longitude = local.getLongitude();
+
+
     }
 }

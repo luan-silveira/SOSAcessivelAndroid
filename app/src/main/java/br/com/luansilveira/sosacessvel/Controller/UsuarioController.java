@@ -61,14 +61,13 @@ public class UsuarioController {
         return resultado;
     }
 
-    public Usuario getById(int id) {
+    public Usuario getUsuario() {
 
         String[] campos = {"_id", "nome", "data_nascimento", "tipo_sanguineo", "fator_rh_sanguineo", "endereco", "informacoes_medicas"};
-        String where = "_id = " + id;
         sqlDb = db.getReadableDatabase();
 
         Cursor cursor = sqlDb.query("usuario", campos,
-                where, null,null,null,null);
+                null, null,null,null,null);
 
         if (cursor == null) {
             return null;
