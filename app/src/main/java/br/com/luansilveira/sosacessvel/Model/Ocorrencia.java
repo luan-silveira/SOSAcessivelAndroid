@@ -1,29 +1,40 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import br.com.luansilveira.sosacessvel.utils.OcorrenciaListener;
 
 @IgnoreExtraProperties
 public class Ocorrencia {
 
     private String key;
-    private Usuario paciente;
+    private Usuario usuario;
     private TipoOcorrencia tipoOcorrencia;
     private String descricao;
     private String localizacao;
     private Double latitude;
     private Double longitude;
-    private Date dataOcorrencia;
+    private String dataOcorrencia;
+    private Integer status = 1;
+    private Atendente atendente;
+    private String mensagemAtendente;
+
+    @Exclude
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public Ocorrencia() {
     }
 
-    public Ocorrencia(String key, Usuario paciente, TipoOcorrencia tipoOcorrencia, String descricao,
-                      String localizacao, Double latitude, Double longitude, Date dataOcorrencia)
+    public Ocorrencia(String key, Usuario usuario, TipoOcorrencia tipoOcorrencia, String descricao,
+                      String localizacao, Double latitude, Double longitude, String dataOcorrencia)
     {
         this.key = key;
-        this.paciente = paciente;
+        this.usuario = usuario;
         this.tipoOcorrencia = tipoOcorrencia;
         this.descricao = descricao;
         this.localizacao = localizacao;
@@ -32,16 +43,16 @@ public class Ocorrencia {
         this.setDataOcorrencia(dataOcorrencia);
     }
 
-    public Ocorrencia(Usuario paciente, TipoOcorrencia tipoOcorrencia, String descricao,
+    public Ocorrencia(Usuario usuario, TipoOcorrencia tipoOcorrencia, String descricao,
                       String localizacao, Double latitude, Double longitude)
     {
-        this.paciente = paciente;
+        this.usuario = usuario;
         this.tipoOcorrencia = tipoOcorrencia;
         this.descricao = descricao;
         this.localizacao = localizacao;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.dataOcorrencia = new Date();
+        this.dataOcorrencia = dateFormat.format(new Date());
     }
 
     public String getKey() {
@@ -52,12 +63,12 @@ public class Ocorrencia {
         this.key = key;
     }
 
-    public Usuario getPaciente() {
-        return paciente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setPaciente(Usuario paciente) {
-        this.paciente = paciente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public TipoOcorrencia getTipoOcorrencia() {
@@ -100,11 +111,50 @@ public class Ocorrencia {
         this.longitude = longitude;
     }
 
-    public Date getDataOcorrencia() {
+    public String getDataOcorrencia() {
         return dataOcorrencia;
     }
 
-    public void setDataOcorrencia(Date dataOcorrencia) {
-        this.dataOcorrencia = dataOcorrencia == null ? new Date() : dataOcorrencia;
+    public void setDataOcorrencia(String dataOcorrencia) {
+        Date data = new Date();
+        try {
+            if ((!dataOcorrencia.trim().isEmpty()) && (dataOcorrencia != null)) {
+                data = dateFormat.parse(dataOcorrencia);
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        } finally {
+            this.dataOcorrencia = dateFormat.format(data);
+        }
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Atendente getAtendente() {
+        return atendente;
+    }
+
+    public void setAtendente(Atendente atendente) {
+        this.atendente = atendente;
+    }
+
+    public String getMensagemAtendente() {
+        return mensagemAtendente;
+    }
+
+    public void setMensagemAtendente(String mensagemAtendente) {
+        this.mensagemAtendente = mensagemAtendente;
+    }
+
+    @Override
+    public String toString() {
+        return tipoOcorrencia.getClassificacaoOcorrencia().getId() + "." +  tipoOcorrencia.getId()
+                + " - " + tipoOcorrencia.getDescricao() + " - " + dataOcorrencia;
     }
 }

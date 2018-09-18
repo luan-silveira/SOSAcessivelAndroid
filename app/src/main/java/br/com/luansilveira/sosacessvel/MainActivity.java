@@ -18,17 +18,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
+import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected UsuarioController userCtrl;
+    protected static ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
+    protected ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +63,44 @@ public class MainActivity extends AppCompatActivity
 
         this.solicitarPermissoes();
 
-//        TextView userName = (TextView) navigationView.findViewById(R.id.userName);
+        TextView userName = navigationView.findViewById(R.id.userName);
 //
 //        userCtrl = new UsuarioController(getBaseContext());
-//        Usuario usuario = userCtrl.getById(1);
+//        Usuario usuario = userCtrl.getUsuario();
 //        String texto = usuario.getNome() + " - " + usuario.getTipoSanguineo().toString()
 //                + (usuario.getRhSanguineo().toString() == "P" ? "+" : "-");
 //        userName.setText(texto);
+
+        listView = findViewById(R.id.listaOcorrencias);
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias");
+        dbRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Ocorrencia ocorrencia = (Ocorrencia) dataSnapshot.getValue(Ocorrencia.class);
+                listaOcorrencias.add(ocorrencia);
+                popularListView();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -128,5 +173,11 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     permissoesRequisitar.toArray(permissoesRequisitarArray), 1);
         }
+    }
+
+    public void popularListView(){
+        ArrayAdapter<Ocorrencia> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1,
+                listaOcorrencias);
+        listView.setAdapter(adapter);
     }
 }

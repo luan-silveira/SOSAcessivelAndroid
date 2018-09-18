@@ -5,6 +5,9 @@ public class ClassificacaoOcorrencia {
     private Integer id;
     private String descricao;
 
+    public ClassificacaoOcorrencia() {
+    }
+
     public ClassificacaoOcorrencia(Integer id, String descricao) {
         this.id = id;
         this.descricao = descricao;

@@ -1,6 +1,7 @@
 package br.com.luansilveira.sosacessvel;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,9 +29,11 @@ import com.google.android.gms.tasks.Task;
 import br.com.luansilveira.sosacessvel.Controller.ClassificacaoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.TipoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
+import br.com.luansilveira.sosacessvel.FirebaseController.OcorrenciaController;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
+import br.com.luansilveira.sosacessvel.utils.OcorrenciaListener;
 
 public class OcorrenciaActivity extends AppCompatActivity {
 
@@ -42,6 +46,7 @@ public class OcorrenciaActivity extends AppCompatActivity {
     private ClassificacaoOcorrenciaController classificacaoController;
     private TipoOcorrenciaController tipoController;
     private UsuarioController usuarioController;
+    private OcorrenciaController ocorrenciaController;
     private TipoOcorrencia tipoOcorrenciaSelecionado;
 
     private GoogleMap map;
@@ -69,6 +74,7 @@ public class OcorrenciaActivity extends AppCompatActivity {
         classificacaoController = new ClassificacaoOcorrenciaController(getBaseContext());
         tipoController = new TipoOcorrenciaController(getBaseContext());
         usuarioController = new UsuarioController(getBaseContext());
+        ocorrenciaController = new OcorrenciaController();
 
         final Cursor cursorClassif = classificacaoController.retrieve();
         this.popularSpinner(spClassifOcorrencias, cursorClassif, new String[]{"descricao", "_id"});
@@ -155,12 +161,24 @@ public class OcorrenciaActivity extends AppCompatActivity {
 
     public void solicitarAtendimentoClick(View view) {
 
-        Usuario paciente = usuarioController.getUsuario();
+        Usuario usuario = usuarioController.getUsuario();
         String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
         String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
-        Double latitude = local.getLatitude();
-        Double longitude = local.getLongitude();
 
+        Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
+                descricaoLocalizacao, local.getLatitude(), local.getLongitude());
+
+
+        ocorrenciaController.create(ocorrencia);
+        AlertDialog.Builder  dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Ocorrência solicitada")
+            .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).create().show();
 
     }
 }

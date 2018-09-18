@@ -10,6 +10,7 @@ import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 public class Usuario {
 
     private Integer id;
+    private String key;
     private String nome;
     private Date dataNascimento;
     private TipoSanguineo tipoSanguineo;
@@ -20,12 +21,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int id, String nome, String dataNascimento, String tipoSanguineo, String rhSanguineo, String endereco, String infMedicas) {
+    public Usuario(int id, String nome, Date dataNascimento, TipoSanguineo tipoSanguineo, Rh rhSanguineo, String endereco, String infMedicas) {
         this.id = id;
         this.nome = nome;
-        this.setDataNascimento(dataNascimento);
-        this.setTipoSanguineo(tipoSanguineo);
-        this.setRhSanguineo(rhSanguineo);
+        this.dataNascimento = dataNascimento;
+        this.tipoSanguineo = tipoSanguineo;
+        this.rhSanguineo = rhSanguineo;
         this.endereco = endereco;
         this.infMedicas = infMedicas;
     }
@@ -51,18 +52,18 @@ public class Usuario {
     }
 
     public String getDataNascimentoString() {
-        return new SimpleDateFormat("dd/MM/yyyy").format(dataNascimento);
+        return (new SimpleDateFormat("dd/MM/yyyy")).format(dataNascimento);
     }
 
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimentoString(String dataNascimento) {
         try {
-            this.dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(dataNascimento);
+            this.dataNascimento = (new SimpleDateFormat("dd/MM/yyyy")).parse(dataNascimento);
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -70,7 +71,7 @@ public class Usuario {
         return tipoSanguineo;
     }
 
-    public void setTipoSanguineo(TipoSanguineo tipoSanguineo) {
+    public void setTipo(TipoSanguineo tipoSanguineo) {
         this.tipoSanguineo = tipoSanguineo;
     }
 
@@ -86,7 +87,7 @@ public class Usuario {
         this.rhSanguineo = rhSanguineo;
     }
 
-    public void setRhSanguineo(String rhSanguineo) {
+    public void setRhSanguineoString(String rhSanguineo) {
         this.rhSanguineo = Rh.valueOf(rhSanguineo);
     }
 
@@ -106,5 +107,11 @@ public class Usuario {
         this.infMedicas = infMedicas;
     }
 
+    public String getKey() {
+        return key;
+    }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

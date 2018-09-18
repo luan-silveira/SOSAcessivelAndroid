@@ -1,17 +1,20 @@
 package br.com.luansilveira.sosacessvel;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
+import br.com.luansilveira.sosacessvel.Enum.Rh;
+import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.DB;
 
@@ -32,13 +35,14 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     }
 
     public void salvarClick(View view) {
-        long retorno = crud.create(this.popularUsuario());
+        Usuario usuario = this.popularUsuario();
+        long retorno = crud.create(usuario);
         if(retorno == -1){
             Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
         } else {
             try {
                 (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -67,10 +71,15 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         valores = new String[]{"P", "N"};
         String rh = valores[rgRhSanguineo.indexOfChild(rbRh)];
 
-        Usuario usuario = new Usuario(
-                1, edNome.getText().toString(), edDataNascimento.getText().toString(),
-                tipo, rh, edEndereco.getText().toString(), edInfMedicas.getText().toString()
-        );
+        Usuario usuario = null;
+        try {
+            usuario = new Usuario(
+                    1, edNome.getText().toString(), (new SimpleDateFormat("dd/MM/yyyy")).parse(edDataNascimento.getText().toString()),
+                    TipoSanguineo.valueOf(tipo), Rh.valueOf(rh), edEndereco.getText().toString(), edInfMedicas.getText().toString()
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         return usuario;
     }

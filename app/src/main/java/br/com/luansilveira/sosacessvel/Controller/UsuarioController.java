@@ -79,9 +79,9 @@ public class UsuarioController {
         Usuario usuario = new Usuario();
         usuario.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
         usuario.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-        usuario.setDataNascimento(cursor.getString(cursor.getColumnIndexOrThrow("data_nascimento")));
+        usuario.setDataNascimentoString(cursor.getString(cursor.getColumnIndexOrThrow("data_nascimento")));
         usuario.setTipoSanguineo(cursor.getString(cursor.getColumnIndexOrThrow("tipo_sanguineo")));
-        usuario.setRhSanguineo(cursor.getString(cursor.getColumnIndexOrThrow("fator_rh_sanguineo")));
+        usuario.setRhSanguineoString(cursor.getString(cursor.getColumnIndexOrThrow("fator_rh_sanguineo")));
         usuario.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
         usuario.setInfMedicas(cursor.getString(cursor.getColumnIndexOrThrow("informacoes_medicas")));
 
