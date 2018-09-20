@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,12 +37,13 @@ import java.util.List;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
+import br.com.luansilveira.sosacessvel.utils.ArrayAdapterOcorrencia;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected UsuarioController userCtrl;
-    protected static ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
+    protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
     protected ListView listView;
 
     @Override
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity
 
         this.solicitarPermissoes();
 
-        TextView userName = navigationView.findViewById(R.id.userName);
+
+
 //
 //        userCtrl = new UsuarioController(getBaseContext());
 //        Usuario usuario = userCtrl.getUsuario();
@@ -73,27 +76,15 @@ public class MainActivity extends AppCompatActivity
 
         listView = findViewById(R.id.listaOcorrencias);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias");
-        dbRef.addChildEventListener(new ChildEventListener() {
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Ocorrencia ocorrencia = (Ocorrencia) dataSnapshot.getValue(Ocorrencia.class);
-                listaOcorrencias.add(ocorrencia);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listaOcorrencias.clear();
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    Ocorrencia ocorrencia = item.getValue(Ocorrencia.class);
+                    listaOcorrencias.add(ocorrencia);
+                }
                 popularListView();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -147,6 +138,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        TextView userName = drawer.findViewById(R.id.text_user_name);
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -176,8 +170,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void popularListView(){
-        ArrayAdapter<Ocorrencia> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1,
-                listaOcorrencias);
-        listView.setAdapter(adapter);
+        ArrayAdapterOcorrencia adapterOcorrencia = new ArrayAdapterOcorrencia(MainActivity.this, listaOcorrencias);
+        listView.setAdapter(adapterOcorrencia);
     }
 }

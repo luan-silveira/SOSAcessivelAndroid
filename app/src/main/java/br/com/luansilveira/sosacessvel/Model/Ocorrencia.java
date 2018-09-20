@@ -25,7 +25,7 @@ public class Ocorrencia {
     private String mensagemAtendente;
 
     @Exclude
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public Ocorrencia() {
     }
@@ -155,6 +155,6 @@ public class Ocorrencia {
     @Override
     public String toString() {
         return tipoOcorrencia.getClassificacaoOcorrencia().getId() + "." +  tipoOcorrencia.getId()
-                + " - " + tipoOcorrencia.getDescricao() + " - " + dataOcorrencia;
+                + " - " + tipoOcorrencia.getDescricao();
     }
 }
