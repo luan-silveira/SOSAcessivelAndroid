@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -61,18 +63,9 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);   
 
         this.solicitarPermissoes();
-
-
-
-//
-//        userCtrl = new UsuarioController(getBaseContext());
-//        Usuario usuario = userCtrl.getUsuario();
-//        String texto = usuario.getNome() + " - " + usuario.getTipoSanguineo().toString()
-//                + (usuario.getRhSanguineo().toString() == "P" ? "+" : "-");
-//        userName.setText(texto);
 
         listView = findViewById(R.id.listaOcorrencias);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias");
@@ -92,6 +85,13 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(MainActivity.this, DetalheOcorrenciaActivity.class));
+            }
+        });
     }
 
     @Override
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,9 +138,14 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (id == R.id.menuCadastro){
 
-        TextView userName = drawer.findViewById(R.id.text_user_name);
+            Intent intent = new Intent(this, CadastroUsuarioActivity.class);
+            intent.putExtra("editar_usuario", true);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         drawer.closeDrawer(GravityCompat.START);
         return true;

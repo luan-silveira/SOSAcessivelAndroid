@@ -15,11 +15,11 @@
 
     <ImageView
         android:id="@+id/imageViewSOSAcessivel"
-        android:layout_width="83dp"
-        android:layout_height="87dp"
+        android:layout_width="92dp"
+        android:layout_height="101dp"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@mipmap/ic_icon" />
+        app:srcCompat="@mipmap/ic_icone_drawer_branco_round" />
 
     <TextView
         android:layout_width="match_parent"

@@ -20,6 +20,16 @@ import br.com.luansilveira.sosacessvel.utils.DB;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
+    protected boolean editarUsuario;
+
+    EditText edNome;
+    EditText edDataNascimento;
+    RadioGroup rgTipoSanguineo;
+    RadioGroup rgRhSanguineo;
+    EditText edEndereco;
+    EditText edInfMedicas;
+    RadioButton rbTipo;
+    RadioButton rbRh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +37,50 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_cadastro_usuario);
 
+        edNome = findViewById(R.id.edNome);
+        edDataNascimento = findViewById(R.id.edDataNasc);
+        rgTipoSanguineo = findViewById(R.id.rgTipoSanguineo);
+        rgRhSanguineo =  findViewById(R.id.rgRHSanguineo);
+        edEndereco = findViewById(R.id.edEndereco);
+        edInfMedicas = findViewById(R.id.edInfMedicas);
+
+        this.editarUsuario = getIntent().getBooleanExtra("editar_usuario", false);
+
         crud = new UsuarioController(getBaseContext());
 
-        if(crud.existeUsuario()){
-            abrirTelaInicial();
+        if (this.editarUsuario){
+            this.carregarUsuario();
+        } else {
+            if (crud.existeUsuario()) {
+                abrirTelaInicial();
+            }
         }
     }
 
     public void salvarClick(View view) {
         Usuario usuario = this.popularUsuario();
-        long retorno = crud.create(usuario);
-        if(retorno == -1){
-            Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
-        } else {
-            try {
-                (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            abrirTelaInicial();
+        if (this.editarUsuario) {
+            long retorno = crud.update(usuario);
+            if(retorno == -1){
+                Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Usuário alterado!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        } else {
+            long retorno = crud.create(usuario);
+            if (retorno == -1) {
+                Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                abrirTelaInicial();
+            }
         }
     }
 
@@ -56,20 +90,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     }
 
     public Usuario popularUsuario(){
-        EditText edNome = findViewById(R.id.edNome);
-        EditText edDataNascimento = findViewById(R.id.edDataNasc);
-        RadioGroup rgTipoSanguineo = findViewById(R.id.rgTipoSanguineo);
-        RadioGroup rgRhSanguineo =  findViewById(R.id.rgRHSanguineo);
-        EditText edEndereco = findViewById(R.id.edEndereco);
-        EditText edInfMedicas = findViewById(R.id.edInfMedicas);
 
-        RadioButton rbTipo = findViewById(rgTipoSanguineo.getCheckedRadioButtonId());
-        String[] valores = new String[]{"A", "B", "AB", "O"};
-        String tipo = valores[rgTipoSanguineo.indexOfChild(rbTipo)];
+        rbTipo = findViewById(rgTipoSanguineo.getCheckedRadioButtonId());
+        rbRh = findViewById(rgRhSanguineo.getCheckedRadioButtonId());
 
-        RadioButton rbRh = findViewById(rgRhSanguineo.getCheckedRadioButtonId());
-        valores = new String[]{"P", "N"};
-        String rh = valores[rgRhSanguineo.indexOfChild(rbRh)];
+        String tipo = TipoSanguineo.values()[rgTipoSanguineo.indexOfChild(rbTipo)].toString();
+        String rh = Rh.values()[rgRhSanguineo.indexOfChild(rbRh)].toString();
 
         Usuario usuario = null;
         try {
@@ -82,5 +108,20 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         }
 
         return usuario;
+    }
+
+    public void carregarUsuario(){
+        Usuario usuario = crud.getUsuario();
+        edNome.setText(usuario.getNome());
+        edEndereco.setText(usuario.getEndereco());
+        edDataNascimento.setText(usuario.getDataNascimentoString());
+        edInfMedicas.setText(usuario.getInfMedicas());
+
+        rgTipoSanguineo.clearCheck();
+        rgRhSanguineo.clearCheck();
+
+        ((RadioButton) rgTipoSanguineo.getChildAt(usuario.getTipoSanguineo().ordinal())).setChecked(true);
+        ((RadioButton) rgRhSanguineo.getChildAt(usuario.getRhSanguineo().ordinal())).setChecked(true);
+
     }
 }

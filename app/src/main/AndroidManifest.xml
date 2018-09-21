@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.luansilveira.sosacessvel">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBW8GdR82WyvV2dLVrpsRlMy0_EPDh8wxI"/>
+            android:value="AIzaSyBW8GdR82WyvV2dLVrpsRlMy0_EPDh8wxI" />
+
         <activity android:name=".CadastroUsuarioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".OcorrenciaActivity"></activity>
+        <activity android:name=".OcorrenciaActivity" />
+        <activity android:name=".DetalheOcorrenciaActivity"></activity>
     </application>
 
 </manifest>

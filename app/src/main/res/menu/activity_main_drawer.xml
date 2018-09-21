@@ -8,6 +8,11 @@
             android:id="@+id/menuOcorrencias"
             android:icon="@drawable/ic_ring_volume"
             android:title="Ocorrências" />
+
+        <item
+            android:id="@+id/menuCadastro"
+            android:title="Alterar cadastro"
+            android:icon="@drawable/ic_alterar_cadastro"/>
     </group>
 
 </menu>

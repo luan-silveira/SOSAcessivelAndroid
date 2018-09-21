@@ -2,6 +2,7 @@ package br.com.luansilveira.sosacessvel;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
@@ -176,6 +177,7 @@ public class OcorrenciaActivity extends AppCompatActivity {
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(OcorrenciaActivity.this, DetalheOcorrenciaActivity.class));
                     finish();
                 }
             }).create().show();
