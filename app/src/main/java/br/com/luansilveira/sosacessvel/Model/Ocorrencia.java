@@ -1,16 +1,14 @@
 package br.com.luansilveira.sosacessvel.Model;
-
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import br.com.luansilveira.sosacessvel.utils.OcorrenciaListener;
-
 @IgnoreExtraProperties
-public class Ocorrencia {
+public class Ocorrencia implements Serializable {
 
     private String key;
     private Usuario usuario;
@@ -152,9 +150,10 @@ public class Ocorrencia {
         this.mensagemAtendente = mensagemAtendente;
     }
 
-    @Override
-    public String toString() {
+
+    public String getDescricaoTipoOcorrencia() {
         return tipoOcorrencia.getClassificacaoOcorrencia().getId() + "." +  tipoOcorrencia.getId()
                 + " - " + tipoOcorrencia.getDescricao();
     }
+
 }

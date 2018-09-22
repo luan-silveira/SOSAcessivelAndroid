@@ -1,6 +1,8 @@
 package br.com.luansilveira.sosacessvel.Model;
 
-public class TipoOcorrencia {
+import java.io.Serializable;
+
+public class TipoOcorrencia implements Serializable {
 
     private Integer id;
     private String descricao;
@@ -37,5 +39,10 @@ public class TipoOcorrencia {
 
     public void setClassificacaoOcorrencia(ClassificacaoOcorrencia classificacao) {
         this.classificacao = classificacao;
+    }
+
+    @Override
+    public String toString() {
+        return this.descricao;
     }
 }

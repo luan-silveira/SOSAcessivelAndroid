@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,7 +90,10 @@ public class MainActivity extends AppCompatActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, DetalheOcorrenciaActivity.class));
+                Ocorrencia ocorrencia = (Ocorrencia) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(MainActivity.this, DetalheOcorrenciaActivity.class);
+                intent.putExtra("ocorrencia", ocorrencia);
+                startActivity(intent);
             }
         });
     }

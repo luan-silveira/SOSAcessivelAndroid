@@ -11,21 +11,21 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:orientation="vertical">
-<!--
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="Dados da ocorrência"
             android:textColor="@color/colorPrimaryDark"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
-            android:layout_marginBottom="10dp"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:text="Tipo da ocorrência"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
         <TextView
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Classificação"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"/>
 
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Status"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"/>
 
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Descrição da ocorrência"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"/>
 
@@ -80,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Descrição da localização"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"/>
 
@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Atendido por"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginBottom="3dp"/>
 
         <TextView
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mensagem"
-            android:textAppearance="@android:style/TextAppearance.Material.ListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"/>
 
@@ -142,7 +142,7 @@
             android:layout_height="200dp"
             android:id="@+id/map_view">
 
-        </com.google.android.gms.maps.MapView> -->
+        </com.google.android.gms.maps.MapView>
 
     </LinearLayout>
 

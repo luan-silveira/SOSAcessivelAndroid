@@ -1,5 +1,6 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.util.Date;
 import br.com.luansilveira.sosacessvel.Enum.Rh;
 import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 
-public class Usuario {
+public class Usuario implements Serializable {
 
     private Integer id;
     private String key;

@@ -43,7 +43,7 @@ public class ArrayAdapterOcorrencia extends ArrayAdapter<Ocorrencia> {
         ImageView shape = convertView.findViewById(R.id.imageView);
 
         String txtData = "Data/Hora: " + ocorrencia.getDataOcorrencia();
-        textoTipoOcorrencia.setText(ocorrencia.toString());
+        textoTipoOcorrencia.setText(ocorrencia.getDescricaoTipoOcorrencia());
         textoDataHora.setText(txtData);
 
         switch(ocorrencia.getStatus()){
