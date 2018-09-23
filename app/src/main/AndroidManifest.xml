@@ -28,7 +28,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".OcorrenciaActivity" />
-        <activity android:name=".DetalheOcorrenciaActivity"></activity>
+        <activity
+            android:name=".MapsDetalheOcorrenciaActivity"
+            android:label="@string/title_activity_maps_detalhe_ocorrencia"></activity>
     </application>
 
 </manifest>

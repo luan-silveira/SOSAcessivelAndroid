@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetalheOcorrenciaActivity">
+    tools:context=".MapsDetalheOcorrenciaActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="ocorrencia"
             android:id="@+id/txt_detalhe_tipoOcorrencia"
-          />
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -91,42 +91,48 @@
             android:id="@+id/txt_detalhe_desc_localizacao"
             />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dados do atendimento"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="10dp"/>
+            android:orientation="vertical"
+            android:id="@+id/layoutAtendimentoOcorrencia">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dados do atendimento"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAppearance="@android:style/TextAppearance.Material.Caption"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="10dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Atendido por"
-            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-            android:layout_marginBottom="3dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Atendido por"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                android:layout_marginBottom="3dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="atendente"
-            android:id="@+id/txt_detalhe_atendente"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mensagem"
-            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="3dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="atendente"
+                android:id="@+id/txt_detalhe_atendente"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mensagem"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="3dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="mensagem"
-            android:id="@+id/txt_detalhe_mensagemAtendente"
-            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="mensagem"
+                android:id="@+id/txt_detalhe_mensagemAtendente"
+                />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -137,13 +143,12 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="10dp"/>
 
-        <com.google.android.gms.maps.MapView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/map_view">
-
-        </com.google.android.gms.maps.MapView>
-
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                tools:context=".MapsDetalheOcorrenciaActivity" />
     </LinearLayout>
 
 </ScrollView>

@@ -40,4 +40,5 @@
         <item>15 - Gravidez/Parto/Aborto</item>
         <item>16 - Problemas respiratórios</item>
     </string-array>
+    <string name="title_activity_maps_detalhe_ocorrencia">Map</string>
 </resources>

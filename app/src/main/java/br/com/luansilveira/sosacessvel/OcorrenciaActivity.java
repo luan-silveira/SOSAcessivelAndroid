@@ -177,7 +177,7 @@ public class OcorrenciaActivity extends AppCompatActivity {
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(OcorrenciaActivity.this, DetalheOcorrenciaActivity.class));
+                    startActivity(new Intent(OcorrenciaActivity.this, MapsDetalheOcorrenciaActivity.class));
                     finish();
                 }
             }).create().show();

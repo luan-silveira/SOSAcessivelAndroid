@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Ocorrencia ocorrencia = (Ocorrencia) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(MainActivity.this, DetalheOcorrenciaActivity.class);
+                Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
                 intent.putExtra("ocorrencia", ocorrencia);
                 startActivity(intent);
             }
