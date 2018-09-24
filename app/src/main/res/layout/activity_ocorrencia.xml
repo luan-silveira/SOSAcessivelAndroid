@@ -1,64 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="15dp"
-    android:orientation="vertical"
-    android:theme="@style/AlertDialog.AppCompat"
-    tools:context=".OcorrenciaActivity">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Selecionar ocorrência:"
-        android:textColor="@color/colorPrimaryDark"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/classifOcorrencias"/>
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:orientation="vertical"
+        android:theme="@style/AlertDialog.AppCompat"
+        tools:context=".OcorrenciaActivity">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/tipoOcorrencias"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecionar ocorrência:"
+            android:textColor="@color/colorPrimaryDark"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/classifOcorrencias"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Descrição da ocorrência\n(Obrigatória se informar ocorrência do tipo &quot;Outros&quot;):"
-        android:textColor="@color/colorPrimaryDark"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edDescricaoOcorrencia"
-        android:inputType="text"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Descrição da localização (Opcional):"
-        android:textColor="@color/colorPrimaryDark"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edDescricaoLocal"
-        android:inputType="text"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtLocalizacao"
-        android:text="Localização atual:"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:text="Solicitar atendimento"
-        android:onClick="solicitarAtendimentoClick"
-        android:layout_margin="30dp"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/tipoOcorrencias"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição da ocorrência\n(Obrigatória se informar ocorrência do tipo &quot;Outros&quot;):"
+            android:textColor="@color/colorPrimaryDark"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edDescricaoOcorrencia"
+            android:inputType="text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição da localização (Opcional):"
+            android:textColor="@color/colorPrimaryDark"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edDescricaoLocal"
+            android:inputType="text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtLocalizacao"
+            android:text="Localização atual:"/>
 
+        <fragment
+            android:id="@+id/mapa_localizacao"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            tools:context=".OcorrenciaActivity" />
 
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:text="Solicitar atendimento"
+            android:onClick="solicitarAtendimentoClick"
+            android:layout_margin="30dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

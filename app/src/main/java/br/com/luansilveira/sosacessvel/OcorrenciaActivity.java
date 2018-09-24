@@ -23,7 +23,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -36,7 +41,7 @@ import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.OcorrenciaListener;
 
-public class OcorrenciaActivity extends AppCompatActivity {
+public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Spinner spClassifOcorrencias;
     Spinner spTipoOcorrencias;
@@ -57,10 +62,12 @@ public class OcorrenciaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ActionBar actionBar = getSupportActionBar();
-
         setContentView(R.layout.activity_ocorrencia);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapa_localizacao);
+        mapFragment.getMapAsync(this);
 
         actionBar.setTitle("Nova Ocorrência");
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -108,7 +115,7 @@ public class OcorrenciaActivity extends AppCompatActivity {
             }
         });
 
-        if(isPermissaoLocalizacao()){getLocalizacao();}
+        if(isPermissaoLocalizacao()) getLocalizacao();
 
     }
 
@@ -150,6 +157,10 @@ public class OcorrenciaActivity extends AppCompatActivity {
                             local = (Location) task.getResult();
                             txtLocalizacao.setText("Localização atual: " + String.valueOf(local.getLatitude())
                                 + ", " + String.valueOf(local.getLongitude()));
+
+                            LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
+                            map.addMarker(new MarkerOptions().position(coordenadas));
                         }
                     }
                 });
@@ -182,5 +193,13 @@ public class OcorrenciaActivity extends AppCompatActivity {
                 }
             }).create().show();
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.getUiSettings().setMapToolbarEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
     }
 }
