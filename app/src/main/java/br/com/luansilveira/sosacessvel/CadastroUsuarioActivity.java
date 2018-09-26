@@ -17,10 +17,13 @@ import br.com.luansilveira.sosacessvel.Enum.Rh;
 import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.DB;
+import br.com.luansilveira.sosacessvel.FirebaseController.UserFirebaseController;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
     protected boolean editarUsuario;
+
+    protected String key;
 
     EditText edNome;
     EditText edDataNascimento;
@@ -61,14 +64,17 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         Usuario usuario = this.popularUsuario();
 
         if (this.editarUsuario) {
+            usuario.setKey(this.key);
             long retorno = crud.update(usuario);
             if(retorno == -1){
                 Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
             } else {
+                UserFirebaseController.update(usuario);
                 Toast.makeText(this, "Usuário alterado!", Toast.LENGTH_LONG).show();
                 finish();
             }
         } else {
+            UserFirebaseController.save(usuario);
             long retorno = crud.create(usuario);
             if (retorno == -1) {
                 Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
@@ -122,6 +128,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         ((RadioButton) rgTipoSanguineo.getChildAt(usuario.getTipoSanguineo().ordinal())).setChecked(true);
         ((RadioButton) rgRhSanguineo.getChildAt(usuario.getRhSanguineo().ordinal())).setChecked(true);
+
+        this.key = usuario.getKey();
 
     }
 }

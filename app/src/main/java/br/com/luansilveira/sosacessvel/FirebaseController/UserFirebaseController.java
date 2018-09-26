@@ -7,10 +7,10 @@ import br.com.luansilveira.sosacessvel.Model.Usuario;
 
 public class UserFirebaseController {
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-    public String save(final Usuario usuario){
+    public static String save(final Usuario usuario){
         String key = new String();
         try {
             DatabaseReference dbRef = database.getReference("usuarios").push();
@@ -24,12 +24,12 @@ public class UserFirebaseController {
         return key;
     }
 
-    public void update(final Usuario usuario){
+    public static void update(final Usuario usuario){
         DatabaseReference dbRef = database.getReference("usuarios").child(usuario.getKey());
         dbRef.setValue(usuario);
     }
 
-    public void delete(final Usuario usuario){
+    public static void delete(final Usuario usuario){
         DatabaseReference dbRef = database.getReference("usuarios").child(usuario.getKey());
         dbRef.removeValue();
     }

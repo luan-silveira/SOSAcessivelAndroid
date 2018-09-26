@@ -15,11 +15,11 @@ import java.util.List;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.OcorrenciaActivity;
 
-public class OcorrenciaController {
+public class OcorrenciaFirebaseController {
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public OcorrenciaController() {
+    public OcorrenciaFirebaseController() {
 
     }
 

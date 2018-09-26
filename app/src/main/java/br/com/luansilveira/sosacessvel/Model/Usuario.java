@@ -1,5 +1,7 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,8 +12,10 @@ import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 
 public class Usuario implements Serializable {
 
-    private Integer id;
+    @Exclude
     private String key;
+
+    private Integer id;
     private String nome;
     private Date dataNascimento;
     private TipoSanguineo tipoSanguineo;

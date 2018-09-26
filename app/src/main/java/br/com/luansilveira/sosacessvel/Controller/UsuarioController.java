@@ -31,6 +31,7 @@ public class UsuarioController {
         dados.put("fator_rh_sanguineo", usuario.getRhSanguineo().toString());
         dados.put("endereco", usuario.getEndereco());
         dados.put("informacoes_medicas", usuario.getInfMedicas());
+        dados.put("_key", usuario.getKey());
 
         resultado = sqlDb.insert("usuario", null, dados);
         sqlDb.close();
@@ -63,7 +64,7 @@ public class UsuarioController {
 
     public Usuario getUsuario() {
 
-        String[] campos = {"_id", "nome", "data_nascimento", "tipo_sanguineo", "fator_rh_sanguineo", "endereco", "informacoes_medicas"};
+        String[] campos = {"_id", "nome", "data_nascimento", "tipo_sanguineo", "fator_rh_sanguineo", "endereco", "informacoes_medicas", "_key"};
         sqlDb = db.getReadableDatabase();
 
         Cursor cursor = sqlDb.query("usuario", campos,
@@ -84,13 +85,14 @@ public class UsuarioController {
         usuario.setRhSanguineoString(cursor.getString(cursor.getColumnIndexOrThrow("fator_rh_sanguineo")));
         usuario.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
         usuario.setInfMedicas(cursor.getString(cursor.getColumnIndexOrThrow("informacoes_medicas")));
+        usuario.setKey(cursor.getString(cursor.getColumnIndexOrThrow("_key")));
 
         return usuario;
     }
 
     public Cursor retrieve() {
 
-        String[] campos = {"_id", "nome", "data_nascimento", "tipo_sanguineo", "fator_rh_sanguineo", "endereco", "informacoes_medicas"};
+        String[] campos = {"_id", "nome", "data_nascimento", "tipo_sanguineo", "fator_rh_sanguineo", "endereco", "informacoes_medicas", "_key"};
         sqlDb = db.getReadableDatabase();
 
         Cursor cursor = sqlDb.query("usuario", campos,

@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
         listView = findViewById(R.id.listaOcorrencias);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias");
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.orderByChild("usuario/key").equalTo((new UsuarioController(getBaseContext())).getUsuario().getKey()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listaOcorrencias.clear();
@@ -137,10 +137,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.menuOcorrencias) {
-            // Handle the camera action
-
-        }
 
         if (id == R.id.menuCadastro){
 

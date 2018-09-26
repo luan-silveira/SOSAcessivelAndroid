@@ -28,6 +28,7 @@ public class DB extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE IF NOT EXISTS usuario(" +
                 "_id integer primary key autoincrement, " +
                 "nome text not null, " +
+                "_key text, " +
                 "data_nascimento text not null, " +
                 "tipo_sanguineo text not null, " +
                 "fator_rh_sanguineo text not null, " +
@@ -42,6 +43,7 @@ public class DB extends SQLiteOpenHelper{
                 "_id integer primary key autoincrement," +
                 "id_classificacao_ocorrencia integer not null, " +
                 "descricao text not null)");
+
 
     }
 

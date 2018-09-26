@@ -10,7 +10,7 @@ import java.util.Date;
 @IgnoreExtraProperties
 public class Ocorrencia implements Serializable {
 
-    private String key;
+    private int id;
     private Usuario usuario;
     private TipoOcorrencia tipoOcorrencia;
     private String descricao;
@@ -24,6 +24,8 @@ public class Ocorrencia implements Serializable {
 
     @Exclude
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    @Exclude
+    private String key;
 
     public Ocorrencia() {
     }
@@ -51,6 +53,14 @@ public class Ocorrencia implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.dataOcorrencia = dateFormat.format(new Date());
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getKey() {

@@ -3,16 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" >
         <item
-            android:id="@+id/menuOcorrencias"
             android:icon="@drawable/ic_ring_volume"
-            android:title="Ocorrências" />
+            android:title="Ocorrências" >
+
+            <menu>
+                <item android:title="Todas"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:id="@+id/menu_ocorrencias_todas"/>
+                <item android:title="Aguardando atendimento"
+                    android:id="@+id/menu_ocorrencias_aguardando_atendimento"/>
+                <item android:title="Atendidas"/>
+                <item android:title="Finalizadas"/>
+            </menu>
+
+        </item>
+    </group>
+    <group android:checkableBehavior="none">
 
         <item
             android:id="@+id/menuCadastro"
             android:title="Alterar cadastro"
             android:icon="@drawable/ic_alterar_cadastro"/>
+
+        <item android:id="@+id/menu_ocorerncia_predef"
+            android:title="Ocorrências pré-definidas"
+            android:icon="@drawable/ic_ocorrencia_predef" />
     </group>
 
 </menu>
