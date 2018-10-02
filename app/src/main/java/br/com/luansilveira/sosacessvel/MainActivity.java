@@ -68,34 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         this.solicitarPermissoes();
 
-        listView = findViewById(R.id.listaOcorrencias);
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias");
-        dbRef.orderByChild("usuario/key").equalTo((new UsuarioController(getBaseContext())).getUsuario().getKey()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listaOcorrencias.clear();
-                for(DataSnapshot item : dataSnapshot.getChildren()){
-                    Ocorrencia ocorrencia = item.getValue(Ocorrencia.class);
-                    listaOcorrencias.add(ocorrencia);
-                }
-                popularListView();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Ocorrencia ocorrencia = (Ocorrencia) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
-                intent.putExtra("ocorrencia", ocorrencia);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -137,6 +110,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if(id == R.id.menu_ocorrencias) {
+            startActivity(new Intent(MainActivity.this, ListaOcorrenciasActivity.class));
+        }
 
         if (id == R.id.menuCadastro){
 
@@ -175,8 +151,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void popularListView(){
-        ArrayAdapterOcorrencia adapterOcorrencia = new ArrayAdapterOcorrencia(MainActivity.this, listaOcorrencias);
-        listView.setAdapter(adapterOcorrencia);
-    }
 }

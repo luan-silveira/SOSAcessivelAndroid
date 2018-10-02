@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import br.com.luansilveira.sosacessvel.Controller.ClassificacaoOcorrenciaController;
+import br.com.luansilveira.sosacessvel.Controller.OcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.TipoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.FirebaseController.OcorrenciaFirebaseController;
@@ -51,7 +52,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     private ClassificacaoOcorrenciaController classificacaoController;
     private TipoOcorrenciaController tipoController;
     private UsuarioController usuarioController;
-    private OcorrenciaFirebaseController ocorrenciaController;
+    private OcorrenciaController ocorrenciaController;
+    private OcorrenciaFirebaseController ocorrenciaFirebaseController;
     private TipoOcorrencia tipoOcorrenciaSelecionado;
 
     private GoogleMap map;
@@ -81,7 +83,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         classificacaoController = new ClassificacaoOcorrenciaController(getBaseContext());
         tipoController = new TipoOcorrenciaController(getBaseContext());
         usuarioController = new UsuarioController(getBaseContext());
-        ocorrenciaController = new OcorrenciaFirebaseController();
+        ocorrenciaController = new OcorrenciaController(getBaseContext());
+        ocorrenciaFirebaseController = new OcorrenciaFirebaseController();
 
         final Cursor cursorClassif = classificacaoController.retrieve();
         this.popularSpinner(spClassifOcorrencias, cursorClassif, new String[]{"descricao", "_id"});
@@ -176,19 +179,24 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
         String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
 
-        final Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
+        Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
                 descricaoLocalizacao, local.getLatitude(), local.getLongitude());
 
 
+        ocorrenciaFirebaseController.create(ocorrencia);
         ocorrenciaController.create(ocorrencia);
+
+        final Ocorrencia ocorr = ocorrencia;
+
         AlertDialog.Builder  dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Ocorrência solicitada")
             .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     Intent intent = new Intent(OcorrenciaActivity.this, MapsDetalheOcorrenciaActivity.class);
-                    intent.putExtra("ocorrencia", ocorrencia);
+                    intent.putExtra("ocorrencia", ocorr);
                     startActivity(intent);
                     finish();
                 }

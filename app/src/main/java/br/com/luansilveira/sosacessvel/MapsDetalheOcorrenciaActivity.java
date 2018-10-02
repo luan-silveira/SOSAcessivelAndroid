@@ -3,6 +3,7 @@ package br.com.luansilveira.sosacessvel;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -99,6 +100,17 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         LatLng coordenadas = new LatLng(ocorrencia.getLatitude(), ocorrencia.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 16));
         mMap.addMarker(new MarkerOptions().position(coordenadas));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     protected void carregarObjetos(){

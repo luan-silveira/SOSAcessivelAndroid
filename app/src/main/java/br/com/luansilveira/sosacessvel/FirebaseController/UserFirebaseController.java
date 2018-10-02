@@ -5,7 +5,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 
-public class UserFirebaseController {
+public abstract class UserFirebaseController {
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 

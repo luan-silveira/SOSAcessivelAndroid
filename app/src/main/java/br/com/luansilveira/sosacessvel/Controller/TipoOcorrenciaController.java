@@ -18,33 +18,33 @@ public class TipoOcorrenciaController {
         db = new DB(context);
     }
 
-    public long create(final TipoOcorrencia classificacao) {
+    public long create(final TipoOcorrencia tipo) {
         ContentValues dados = new ContentValues();
         long resultado;
 
         sqlDb = db.getWritableDatabase();
-        if(classificacao.getId() != null){
-            dados.put("_id", classificacao.getId());
+        if(tipo.getId() != null){
+            dados.put("_id", tipo.getId());
         }
-        dados.put("descricao", classificacao.getDescricao());
+        dados.put("descricao", tipo.getDescricao());
 
         resultado = sqlDb.insert("tipo_ocorrencia", null, dados);
         sqlDb.close();
         return resultado;
     }
 
-    public long update(final TipoOcorrencia classificacao) {
+    public long update(final TipoOcorrencia tipo) {
 
         ContentValues dados = new ContentValues();
         long resultado;
 
         sqlDb = db.getWritableDatabase();
-        if(classificacao.getId() != null){
-            dados.put("_id", classificacao.getId());
+        if(tipo.getId() != null){
+            dados.put("_id", tipo.getId());
         }
-        dados.put("descricao", classificacao.getDescricao());
+        dados.put("descricao", tipo.getDescricao());
 
-        String where = "_id = " + classificacao.getId();
+        String where = "_id = " + tipo.getId();
 
         resultado = sqlDb.update("tipo_ocorrencia", dados, where, null);
         sqlDb.close();
@@ -52,9 +52,9 @@ public class TipoOcorrenciaController {
         return resultado;
     }
 
-    public long delete(final TipoOcorrencia classificacao) {
+    public long delete(final TipoOcorrencia tipo) {
 
-        String where = "_id = " + classificacao.getId();
+        String where = "_id = " + tipo.getId();
         sqlDb = db.getReadableDatabase();
 
         long resultado = sqlDb.delete("tipo_ocorrencia", where, null);

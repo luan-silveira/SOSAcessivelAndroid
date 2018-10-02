@@ -10,7 +10,7 @@ import java.util.Date;
 @IgnoreExtraProperties
 public class Ocorrencia implements Serializable {
 
-    private int id;
+    private Integer id;
     private Usuario usuario;
     private TipoOcorrencia tipoOcorrencia;
     private String descricao;
@@ -28,6 +28,7 @@ public class Ocorrencia implements Serializable {
     private String key;
 
     public Ocorrencia() {
+        this.dataOcorrencia = dateFormat.format(new Date());
     }
 
     public Ocorrencia(String key, Usuario usuario, TipoOcorrencia tipoOcorrencia, String descricao,
@@ -55,11 +56,11 @@ public class Ocorrencia implements Serializable {
         this.dataOcorrencia = dateFormat.format(new Date());
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -158,6 +159,10 @@ public class Ocorrencia implements Serializable {
 
     public void setMensagemAtendente(String mensagemAtendente) {
         this.mensagemAtendente = mensagemAtendente;
+    }
+
+    public boolean isEnviadoFirebase(){
+        return (this.key != null);
     }
 
 

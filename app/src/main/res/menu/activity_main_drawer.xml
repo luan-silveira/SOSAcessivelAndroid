@@ -3,24 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single" >
+    <group android:checkableBehavior="none" >
         <item
             android:icon="@drawable/ic_ring_volume"
-            android:title="Ocorrências" >
-
-            <menu>
-                <item android:title="Todas"
-                    android:icon="@drawable/ic_menu_camera"
-                    android:id="@+id/menu_ocorrencias_todas"/>
-                <item android:title="Aguardando atendimento"
-                    android:id="@+id/menu_ocorrencias_aguardando_atendimento"/>
-                <item android:title="Atendidas"/>
-                <item android:title="Finalizadas"/>
-            </menu>
+            android:title="Ocorrências"
+            android:id="@+id/menu_ocorrencias">
 
         </item>
-    </group>
-    <group android:checkableBehavior="none">
 
         <item
             android:id="@+id/menuCadastro"

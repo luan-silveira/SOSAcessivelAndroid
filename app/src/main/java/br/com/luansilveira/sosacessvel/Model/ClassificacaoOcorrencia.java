@@ -2,9 +2,16 @@ package br.com.luansilveira.sosacessvel.Model;
 
 import java.io.Serializable;
 
+import br.com.luansilveira.sosacessvel.Annotations.Coluna;
+import br.com.luansilveira.sosacessvel.Annotations.PrimaryKey;
+import br.com.luansilveira.sosacessvel.Annotations.Tabela;
+
+@Tabela(nome = "classificacao_ocorrencia")
 public class ClassificacaoOcorrencia implements Serializable {
 
+    @PrimaryKey
     private Integer id;
+    @Coluna(nome = "descricao")
     private String descricao;
 
     public ClassificacaoOcorrencia() {

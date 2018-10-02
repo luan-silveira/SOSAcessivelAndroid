@@ -44,7 +44,31 @@ public class DB extends SQLiteOpenHelper{
                 "id_classificacao_ocorrencia integer not null, " +
                 "descricao text not null)");
 
+        db.execSQL("CREATE TABLE IF NOT EXISTS atendente (" +
+                "_id integer primary key autoincrement, " +
+                "nome text not null, " +
+                "instituicao_atendimento text )");
 
+        db.execSQL("create table if not exists ocorrencia(\n" +
+                "_id integer primary key autoincrement,\n" +
+                "_key text, \n " +
+                "id_tipo_ocorrencia integer not null,\n" +
+                "descricao text not null,\n" +
+                "localizacao text,\n" +
+                "latitude double,\n" +
+                "longitude double,\n" +
+                "data_ocorrencia text,\n" +
+                "status integer,\n" +
+                "id_atendente integer,\n" +
+                "mensagem_atendente text )");
+
+        db.execSQL("create table if not exists ocorrencia_cadastrada(\n" +
+                "_id integer primary key autoincrement,\n" +
+                "_key text, \n " +
+                "id_tipo_ocorrencia integer not null,\n" +
+                "descricao text not null,\n" +
+                "localizacao text,\n" +
+                "data_ocorrencia text )");
     }
 
     @Override

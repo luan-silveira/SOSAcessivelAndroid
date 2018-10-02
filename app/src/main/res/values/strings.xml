@@ -41,4 +41,11 @@
         <item>16 - Problemas respiratórios</item>
     </string-array>
     <string name="title_activity_maps_detalhe_ocorrencia">Map</string>
+
+    <string-array name="status_ocorrencias">
+        <item>Todas</item>
+        <item>Pendentes</item>
+        <item>Atendidas</item>
+        <item>Finalizadas</item>
+    </string-array>
 </resources>
