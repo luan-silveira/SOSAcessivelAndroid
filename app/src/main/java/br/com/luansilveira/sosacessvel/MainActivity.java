@@ -19,12 +19,13 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected UsuarioControllerOriginal userCtrl;
+    protected UsuarioController userCtrl;
     protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
     protected ListView listView;
 
