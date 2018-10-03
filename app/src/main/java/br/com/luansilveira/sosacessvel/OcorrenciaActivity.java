@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -32,11 +33,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.lang.reflect.Type;
+import java.sql.SQLException;
+import java.util.List;
+
 import br.com.luansilveira.sosacessvel.Controller.ClassificacaoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.OcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.TipoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.FirebaseController.OcorrenciaFirebaseController;
+import br.com.luansilveira.sosacessvel.Model.ClassificacaoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
@@ -80,50 +86,55 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         edDescricaoOcorrencia = findViewById(R.id.edDescricaoOcorrencia);
         edDescricaoLocalizacao = findViewById(R.id.edDescricaoLocal);
 
-        classificacaoController = new ClassificacaoOcorrenciaController(getBaseContext());
-        tipoController = new TipoOcorrenciaController(getBaseContext());
-        usuarioController = new UsuarioController(getBaseContext());
-        ocorrenciaController = new OcorrenciaController(getBaseContext());
-        ocorrenciaFirebaseController = new OcorrenciaFirebaseController();
+        try {
+            classificacaoController = new ClassificacaoOcorrenciaController(this);
+            tipoController = new TipoOcorrenciaController(this);
+            usuarioController = new UsuarioController(this);
+            ocorrenciaController = new OcorrenciaController(this);
+            ocorrenciaFirebaseController = new OcorrenciaFirebaseController();
 
-        final Cursor cursorClassif = classificacaoController.retrieve();
-        this.popularSpinner(spClassifOcorrencias, cursorClassif, new String[]{"descricao", "_id"});
 
-        spClassifOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursorClassif = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
-                int idClassificacao = cursorClassif.getInt(cursorClassif.getColumnIndexOrThrow("_id"));
-                Cursor cursorTipo = tipoController.retrieve(idClassificacao);
-                popularSpinner(spTipoOcorrencias, cursorTipo, new String[]{"descricao"});
-            }
+            final List<ClassificacaoOcorrencia> listaClassificacoes = classificacaoController.queryForAll();
+            this.popularSpinner(spClassifOcorrencias, listaClassificacoes);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            spClassifOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    int idClassificacao = ((ClassificacaoOcorrencia) parent.getItemAtPosition(position)).getId();
+                    try {
+                        List<TipoOcorrencia> listaTipos = tipoController.getTiposPelaClassificacao(idClassificacao);
+                        popularSpinner(spTipoOcorrencias, listaTipos);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
 
-        spTipoOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursorTipo = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
-                tipoOcorrenciaSelecionado = tipoController.popularTipoOcorrencia(cursorTipo);
-            }
+            spTipoOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    tipoOcorrenciaSelecionado = (TipoOcorrencia) parent.getItemAtPosition(position);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if(isPermissaoLocalizacao()) getLocalizacao();
 
     }
 
-    protected void popularSpinner(Spinner spinner, Cursor cursor, String[] campos){
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item,
-                cursor, campos, new int[]{android.R.id.text1});
+    protected void popularSpinner(Spinner spinner, List<?> lista){
+//        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item,
+//                cursor, campos, new int[]{android.R.id.text1});
+
+        ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista.toArray());
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -175,32 +186,36 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
     public void solicitarAtendimentoClick(View view) {
 
-        Usuario usuario = usuarioController.getUsuario();
-        String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
-        String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
+        try {
+            Usuario usuario = usuarioController.getUsuario();
+            String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
+            String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
 
-        Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
-                descricaoLocalizacao, local.getLatitude(), local.getLongitude());
+            Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
+                    descricaoLocalizacao, local.getLatitude(), local.getLongitude());
 
 
-        ocorrenciaFirebaseController.create(ocorrencia);
-        ocorrenciaController.create(ocorrencia);
+            ocorrenciaFirebaseController.create(ocorrencia);
+            ocorrenciaController.create(ocorrencia);
 
-        final Ocorrencia ocorr = ocorrencia;
+            final Ocorrencia ocorr = ocorrencia;
 
-        AlertDialog.Builder  dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Ocorrência solicitada")
-            .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle("Ocorrência solicitada")
+                    .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    Intent intent = new Intent(OcorrenciaActivity.this, MapsDetalheOcorrenciaActivity.class);
-                    intent.putExtra("ocorrencia", ocorr);
-                    startActivity(intent);
-                    finish();
-                }
-            }).create().show();
+                            Intent intent = new Intent(OcorrenciaActivity.this, MapsDetalheOcorrenciaActivity.class);
+                            intent.putExtra("ocorrencia", ocorr);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).create().show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

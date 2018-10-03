@@ -9,15 +9,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Enum.Rh;
 import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
+import br.com.luansilveira.sosacessvel.FirebaseController.UserFirebaseController;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.DB;
-import br.com.luansilveira.sosacessvel.FirebaseController.UserFirebaseController;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
@@ -49,44 +50,49 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         this.editarUsuario = getIntent().getBooleanExtra("editar_usuario", false);
 
-        crud = new UsuarioController(getBaseContext());
+        try {
+            crud = new UsuarioController(getBaseContext());
 
-        if (this.editarUsuario){
-            this.carregarUsuario();
-        } else {
-            if (crud.existeUsuario()) {
-                abrirTelaInicial();
+            if (this.editarUsuario){
+                this.carregarUsuario();
+            } else {
+                if (crud.existeUsuario()) {
+                    abrirTelaInicial();
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public void salvarClick(View view) {
         Usuario usuario = this.popularUsuario();
 
-        if (this.editarUsuario) {
-            usuario.setKey(this.key);
-            long retorno = crud.update(usuario);
-            if(retorno == -1){
-                Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
-            } else {
-                UserFirebaseController.update(usuario);
-                Toast.makeText(this, "Usuário alterado!", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        } else {
-            UserFirebaseController.save(usuario);
-            long retorno = crud.create(usuario);
-            if (retorno == -1) {
-                Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        try {
+            if (this.editarUsuario) {
+                usuario.setKey(this.key);
+                long retorno = crud.update(usuario);
+                if (retorno == -1) {
+                    Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
+                } else {
+                    UserFirebaseController.update(usuario);
+                    Toast.makeText(this, "Usuário alterado!", Toast.LENGTH_LONG).show();
+                    finish();
                 }
-
-                abrirTelaInicial();
+            } else {
+                UserFirebaseController.save(usuario);
+                long retorno = crud.create(usuario);
+                if (retorno == -1) {
+                    Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
+                } else {
+                    (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
+                    abrirTelaInicial();
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -117,19 +123,22 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     }
 
     public void carregarUsuario(){
-        Usuario usuario = crud.getUsuario();
-        edNome.setText(usuario.getNome());
-        edEndereco.setText(usuario.getEndereco());
-        edDataNascimento.setText(usuario.getDataNascimentoString());
-        edInfMedicas.setText(usuario.getInfMedicas());
+        try {
+            Usuario usuario = crud.getUsuario();
+            edNome.setText(usuario.getNome());
+            edEndereco.setText(usuario.getEndereco());
+            edDataNascimento.setText(usuario.getDataNascimentoString());
+            edInfMedicas.setText(usuario.getInfMedicas());
 
-        rgTipoSanguineo.clearCheck();
-        rgRhSanguineo.clearCheck();
+            rgTipoSanguineo.clearCheck();
+            rgRhSanguineo.clearCheck();
 
-        ((RadioButton) rgTipoSanguineo.getChildAt(usuario.getTipoSanguineo().ordinal())).setChecked(true);
-        ((RadioButton) rgRhSanguineo.getChildAt(usuario.getRhSanguineo().ordinal())).setChecked(true);
+            ((RadioButton) rgTipoSanguineo.getChildAt(usuario.getTipoSanguineo().ordinal())).setChecked(true);
+            ((RadioButton) rgRhSanguineo.getChildAt(usuario.getRhSanguineo().ordinal())).setChecked(true);
 
-        this.key = usuario.getKey();
-
+            this.key = usuario.getKey();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

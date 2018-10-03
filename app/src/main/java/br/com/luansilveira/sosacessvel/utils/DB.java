@@ -2,16 +2,24 @@ package br.com.luansilveira.sosacessvel.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
-import br.com.luansilveira.sosacessvel.R;
+import br.com.luansilveira.sosacessvel.Model.Atendente;
+import br.com.luansilveira.sosacessvel.Model.ClassificacaoOcorrencia;
+import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
+import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
+import br.com.luansilveira.sosacessvel.Model.Usuario;
 
-public class DB extends SQLiteOpenHelper{
+public class DB extends OrmLiteSqliteOpenHelper{
 
     private static final String DB_NOME = "sos_acessivel";
     private static final int DB_VERSAO = 1;
@@ -23,58 +31,24 @@ public class DB extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS usuario(" +
-                "_id integer primary key autoincrement, " +
-                "nome text not null, " +
-                "_key text, " +
-                "data_nascimento text not null, " +
-                "tipo_sanguineo text not null, " +
-                "fator_rh_sanguineo text not null, " +
-                "endereco text, " +
-                "informacoes_medicas text)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS classificacao_ocorrencia(" +
-                "_id integer primary key autoincrement, " +
-                "descricao text not null)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS tipo_ocorrencia(" +
-                "_id integer primary key autoincrement," +
-                "id_classificacao_ocorrencia integer not null, " +
-                "descricao text not null)");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS atendente (" +
-                "_id integer primary key autoincrement, " +
-                "nome text not null, " +
-                "instituicao_atendimento text )");
-
-        db.execSQL("create table if not exists ocorrencia(\n" +
-                "_id integer primary key autoincrement,\n" +
-                "_key text, \n " +
-                "id_tipo_ocorrencia integer not null,\n" +
-                "descricao text not null,\n" +
-                "localizacao text,\n" +
-                "latitude double,\n" +
-                "longitude double,\n" +
-                "data_ocorrencia text,\n" +
-                "status integer,\n" +
-                "id_atendente integer,\n" +
-                "mensagem_atendente text )");
-
-        db.execSQL("create table if not exists ocorrencia_cadastrada(\n" +
-                "_id integer primary key autoincrement,\n" +
-                "_key text, \n " +
-                "id_tipo_ocorrencia integer not null,\n" +
-                "descricao text not null,\n" +
-                "localizacao text,\n" +
-                "data_ocorrencia text )");
+    public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+        try {
+            TableUtils.createTableIfNotExists(connectionSource, ClassificacaoOcorrencia.class);
+            TableUtils.createTableIfNotExists(connectionSource, TipoOcorrencia.class);
+            TableUtils.createTableIfNotExists(connectionSource, Usuario.class);
+            TableUtils.createTableIfNotExists(connectionSource, Atendente.class);
+            TableUtils.createTableIfNotExists(connectionSource, Ocorrencia.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
 
     }
+
+
 
     public int execSQLFromFile(int resourceId) throws IOException {
         int result = 0;
@@ -96,4 +70,5 @@ public class DB extends SQLiteOpenHelper{
 
         return result;
     }
+
 }

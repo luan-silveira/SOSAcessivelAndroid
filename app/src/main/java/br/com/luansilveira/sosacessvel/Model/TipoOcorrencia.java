@@ -1,11 +1,18 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
+@DatabaseTable(tableName = "tipo_ocorrencia")
 public class TipoOcorrencia implements Serializable {
 
+    @DatabaseField(generatedId = true)
     private Integer id;
+    @DatabaseField
     private String descricao;
+    @DatabaseField(columnName = "id_classificacao_ocorrencia", foreign = true, foreignColumnName = "id")
     private ClassificacaoOcorrencia classificacao;
 
     public TipoOcorrencia() {

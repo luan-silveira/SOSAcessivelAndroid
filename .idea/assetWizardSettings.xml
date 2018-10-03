@@ -33,6 +33,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Luan\AndroidStudio\SOSAcessivel\Imagens\emergencia.png" />
                                       <entry key="outputName" value="ic_alterar_cadastro" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="000000" />
@@ -102,30 +104,25 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="image">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="trimmed" value="true" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="assetType" value="IMAGE" />
                                       <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="C:\Luan\AndroidStudio\SOSAcessivel\Imagens\cadastro.png" />
-                                      <entry key="outputName" value="ic_alterar_cadastro" />
+                                      <entry key="imageAsset" value="C:\Luan\AndroidStudio\SOSAcessivel\Imagens\emergencia.png" />
+                                      <entry key="outputName" value="ic_emergencia" />
                                     </map>
                                   </option>
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>
@@ -151,7 +148,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_contacts_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/alert/ic_add_alert_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -161,7 +158,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_alterar_cadastro" />
+                            <entry key="outputName" value="ic_alert" />
                             <entry key="sourceFile" value="C:\Users\luan_" />
                           </map>
                         </option>

@@ -3,11 +3,7 @@ package br.com.luansilveira.sosacessvel;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -19,33 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
-import br.com.luansilveira.sosacessvel.Model.Usuario;
-import br.com.luansilveira.sosacessvel.utils.ArrayAdapterOcorrencia;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected UsuarioController userCtrl;
+    protected UsuarioControllerOriginal userCtrl;
     protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
     protected ListView listView;
 

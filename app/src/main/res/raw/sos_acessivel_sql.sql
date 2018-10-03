@@ -1,4 +1,4 @@
-INSERT INTO classificacao_ocorrencia VALUES 
+INSERT INTO classificacao_ocorrencia (id, descricao) VALUES
 (1,'Acidentes e traumas'),
 (2,'Emergências médicas'),
 (3,'Emergências policiais'),
@@ -6,7 +6,7 @@ INSERT INTO classificacao_ocorrencia VALUES
 (5,'Risco imediato à vida'),
 (6,'Outros');
 
-INSERT INTO tipo_ocorrencia (_id, descricao, id_classificacao_ocorrencia) VALUES 
+INSERT INTO tipo_ocorrencia (id, descricao, id_classificacao_ocorrencia) VALUES
 (1,'Agressão/Violência',1),
 (2,'Ferimento por arma branca/arma de fogo',1),
 (3,'Mordida de animal',1),

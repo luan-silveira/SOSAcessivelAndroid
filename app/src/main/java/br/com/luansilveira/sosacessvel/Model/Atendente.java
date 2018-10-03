@@ -1,10 +1,18 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
+@DatabaseTable(tableName = "atendente")
 public class Atendente implements Serializable{
+
+    @DatabaseField(generatedId = true)
     private Integer id;
+    @DatabaseField
     private String nome;
+    @DatabaseField
     private String instituicao;
 
     public Atendente() {

@@ -4,20 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import br.com.luansilveira.sosacessvel.Controller.OcorrenciaController;
@@ -46,37 +39,51 @@ public class ListaOcorrenciasActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listaOcorrencias);
         spinner = findViewById(R.id.spinner_tipo_ocorrencias);
-        ocorrenciaController = new OcorrenciaController(this);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
-                    listaOcorrencias = ocorrenciaController.getListaOcorrencias();
-                } else {
-                    listaOcorrencias = ocorrenciaController.getListaOcorrencias(position);
+        try {
+            ocorrenciaController = new OcorrenciaController(this);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        try {
+                            listaOcorrencias = (ArrayList<Ocorrencia>) ocorrenciaController.getListaOcorrencias();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            listaOcorrencias = (ArrayList<Ocorrencia>) ocorrenciaController.getListaOcorrenciasPorStatus(position);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    popularListView();
                 }
 
-                popularListView();
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
 
-            }
-        });
+            this.popularListView();
 
-        this.popularListView();
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Ocorrencia ocorrencia = (Ocorrencia) parent.getItemAtPosition(position);
+                    Intent intent = new Intent(ListaOcorrenciasActivity.this, MapsDetalheOcorrenciaActivity.class);
+                    intent.putExtra("ocorrencia", ocorrencia);
+                    startActivity(intent);
+                }
+            });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Ocorrencia ocorrencia = (Ocorrencia) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(ListaOcorrenciasActivity.this, MapsDetalheOcorrenciaActivity.class);
-                intent.putExtra("ocorrencia", ocorrencia);
-                startActivity(intent);
-            }
-        });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

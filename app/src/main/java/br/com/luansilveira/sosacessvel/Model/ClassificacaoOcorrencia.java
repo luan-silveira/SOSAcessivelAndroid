@@ -1,21 +1,23 @@
 package br.com.luansilveira.sosacessvel.Model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 import br.com.luansilveira.sosacessvel.Annotations.Coluna;
 import br.com.luansilveira.sosacessvel.Annotations.PrimaryKey;
 import br.com.luansilveira.sosacessvel.Annotations.Tabela;
 
-@Tabela(nome = "classificacao_ocorrencia")
+@DatabaseTable(tableName = "classificacao_ocorrencia")
 public class ClassificacaoOcorrencia implements Serializable {
 
-    @PrimaryKey
+    @DatabaseField(generatedId = true)
     private Integer id;
-    @Coluna(nome = "descricao")
+    @DatabaseField
     private String descricao;
 
-    public ClassificacaoOcorrencia() {
-    }
+    public ClassificacaoOcorrencia() {}
 
     public ClassificacaoOcorrencia(Integer id, String descricao) {
         this.id = id;

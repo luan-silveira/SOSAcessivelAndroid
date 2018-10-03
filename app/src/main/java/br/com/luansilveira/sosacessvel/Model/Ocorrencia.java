@@ -1,30 +1,45 @@
 package br.com.luansilveira.sosacessvel.Model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@DatabaseTable(tableName = "ocorrencia")
 @IgnoreExtraProperties
 public class Ocorrencia implements Serializable {
 
+    @DatabaseField(generatedId = true)
     private Integer id;
+    @DatabaseField(columnName = "id_usuario", foreign = true, foreignColumnName = "id")
     private Usuario usuario;
+    @DatabaseField(columnName = "id_tipo_ocorrencia", foreign = true, foreignColumnName = "id")
     private TipoOcorrencia tipoOcorrencia;
+    @DatabaseField
     private String descricao;
+    @DatabaseField
     private String localizacao;
+    @DatabaseField
     private Double latitude;
+    @DatabaseField
     private Double longitude;
+    @DatabaseField(columnName = "data_ocorrencia")
     private String dataOcorrencia;
+    @DatabaseField
     private Integer status = 1;
+    @DatabaseField(columnName = "id_atendente", foreign = true, foreignColumnName = "id")
     private Atendente atendente;
+    @DatabaseField(columnName = "mensagem_atendente")
     private String mensagemAtendente;
 
     @Exclude
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     @Exclude
+    @DatabaseField
     private String key;
 
     public Ocorrencia() {

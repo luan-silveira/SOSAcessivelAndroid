@@ -1,6 +1,8 @@
 package br.com.luansilveira.sosacessvel.Model;
 
 import com.google.firebase.database.Exclude;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -10,17 +12,26 @@ import java.util.Date;
 import br.com.luansilveira.sosacessvel.Enum.Rh;
 import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 
+@DatabaseTable(tableName = "usuario")
 public class Usuario implements Serializable {
 
     @Exclude
+    @DatabaseField
     private String key;
 
+    @DatabaseField(generatedId = true)
     private Integer id;
+    @DatabaseField
     private String nome;
+    @DatabaseField(columnName = "data_nascimento")
     private Date dataNascimento;
+    @DatabaseField(columnName = "tipo_sanguineo")
     private TipoSanguineo tipoSanguineo;
+    @DatabaseField(columnName = "rh_sanguineo")
     private Rh rhSanguineo;
+    @DatabaseField
     private String endereco;
+    @DatabaseField(columnName = "inf_medicas")
     private String infMedicas;
 
     public Usuario() {
