@@ -42,10 +42,29 @@
     </string-array>
     <string name="title_activity_maps_detalhe_ocorrencia">Map</string>
 
+    <string name="txt_intro_1">
+        O SOS Acessível é um aplicativo desenvolvido para prover um meio de comunicação dos deficientes auditivos
+        com os serviços de emergências, tais como Corpo de Bombeiros, SAMU, Polícia Militar.
+        Com ele, você poderá enviar uma ocorrência para a central de atendimento, e ela a redirecionará para a instituição correta,
+        enviando suas informações pessoais e sua localização atual.
+    </string>
+
+    <string name="txt_intro_2">
+        Vale ressaltar que este aplicativo deve ser usado apenas em situações de emergência. Assim como nas ligações telefônicas, toda ocorrência
+        falsa ou de má procedência será considerada como trote, e o solicitante será denunciado e poderá sofrer penalidades.
+    </string>
+
+    <string name="txt_intro_3">
+        Para o funcionamento ideal, este app necessita de conexão ativa com a internet ou rede de dados. Além disso, é nesessário conceder
+        a permissão para o uso da geolocalização de seu aparelho.
+    </string>
+
     <string-array name="status_ocorrencias">
         <item>Todas</item>
         <item>Pendentes</item>
         <item>Atendidas</item>
         <item>Finalizadas</item>
     </string-array>
+    <string name="title_activity_intro">IntroActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

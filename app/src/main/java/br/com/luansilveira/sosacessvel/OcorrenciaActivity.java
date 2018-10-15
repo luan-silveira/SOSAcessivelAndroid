@@ -17,10 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,32 +42,40 @@ import java.util.List;
 
 import br.com.luansilveira.sosacessvel.Controller.ClassificacaoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.OcorrenciaController;
+import br.com.luansilveira.sosacessvel.Controller.OcorrenciaPreCadastradaController;
 import br.com.luansilveira.sosacessvel.Controller.TipoOcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.FirebaseController.OcorrenciaFirebaseController;
 import br.com.luansilveira.sosacessvel.Model.ClassificacaoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
+import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
+import br.com.luansilveira.sosacessvel.utils.Geolocalizacao;
 
 public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Spinner spClassifOcorrencias;
     Spinner spTipoOcorrencias;
     TextView txtLocalizacao;
+    TextView txtInsituicao;
     EditText edDescricaoOcorrencia;
     EditText edDescricaoLocalizacao;
 
+    private boolean cadastrarOcorrencia;
     private ClassificacaoOcorrenciaController classificacaoController;
     private TipoOcorrenciaController tipoController;
     private UsuarioController usuarioController;
     private OcorrenciaController ocorrenciaController;
+    private OcorrenciaPreCadastradaController ocorrenciaPreCadastradaController;
     private OcorrenciaFirebaseController ocorrenciaFirebaseController;
     private TipoOcorrencia tipoOcorrenciaSelecionado;
 
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocation;
     private Location local;
+
+    private Geolocalizacao geolocalizacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +91,34 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
+        cadastrarOcorrencia = this.getIntent().getBooleanExtra("cadastrarOcorrencia", false);
+
         spClassifOcorrencias = findViewById(R.id.classifOcorrencias);
         spTipoOcorrencias = findViewById(R.id.tipoOcorrencias);
         txtLocalizacao = findViewById(R.id.txtLocalizacao);
+        txtInsituicao = findViewById(R.id.orgao_instituicao);
         edDescricaoOcorrencia = findViewById(R.id.edDescricaoOcorrencia);
         edDescricaoLocalizacao = findViewById(R.id.edDescricaoLocal);
+
+        geolocalizacao = new Geolocalizacao(this);
+
+        LinearLayout layoutLocalizacao = findViewById(R.id.layoutLocalizacao);
+        Button btSolicitarAtendimento = findViewById(R.id.btSolicitarAtendimento);
+        Button btCadastrarOcorrencia = findViewById(R.id.btCadastrarOcorrencia);
+
+        if(this.cadastrarOcorrencia){
+            layoutLocalizacao.setVisibility(View.GONE);
+            btSolicitarAtendimento.setVisibility(View.GONE);
+        } else {
+            btCadastrarOcorrencia.setVisibility(View.GONE);
+        }
 
         try {
             classificacaoController = new ClassificacaoOcorrenciaController(this);
             tipoController = new TipoOcorrenciaController(this);
             usuarioController = new UsuarioController(this);
             ocorrenciaController = new OcorrenciaController(this);
+            ocorrenciaPreCadastradaController = new OcorrenciaPreCadastradaController(this);
             ocorrenciaFirebaseController = new OcorrenciaFirebaseController();
 
 
@@ -117,6 +145,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     tipoOcorrenciaSelecionado = (TipoOcorrencia) parent.getItemAtPosition(position);
+                    txtInsituicao.setText(tipoOcorrenciaSelecionado.getNomeInstituicao());
                 }
 
                 @Override
@@ -126,13 +155,11 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             e.printStackTrace();
         }
 
-        if(isPermissaoLocalizacao()) getLocalizacao();
+        if(!this.cadastrarOcorrencia && geolocalizacao.isPermissaoLocalizacao()) getLocalizacao();
 
     }
 
     protected void popularSpinner(Spinner spinner, List<?> lista){
-//        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item,
-//                cursor, campos, new int[]{android.R.id.text1});
 
         ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista.toArray());
 
@@ -151,37 +178,27 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         return super.onOptionsItemSelected(item);
     }
 
-    protected boolean isPermissaoLocalizacao(){
-        return ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED));
-    }
+//    protected boolean isPermissaoLocalizacao(){
+//        return ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+//                        PackageManager.PERMISSION_GRANTED) ||
+//                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+//                        PackageManager.PERMISSION_GRANTED));
+//    }
 
     protected void getLocalizacao(){
-        fusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            if(this.isPermissaoLocalizacao()){
-                final Task localizacao = fusedLocation.getLastLocation();
-                localizacao.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            local = (Location) task.getResult();
-                            txtLocalizacao.setText("Localização atual: " + String.valueOf(local.getLatitude())
-                                + ", " + String.valueOf(local.getLongitude()));
 
-                            LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
-                            map.addMarker(new MarkerOptions().position(coordenadas));
-                        }
-                    }
-                });
+        geolocalizacao.setListener(new Geolocalizacao.GeolocalizacaoListener() {
+            @Override
+            public void onLocalizacaoEncontrada(Location local) {
+                OcorrenciaActivity.this.local = local;
+                txtLocalizacao.setText("Localização atual: " + String.valueOf(local.getLatitude())
+                        + ", " + String.valueOf(local.getLongitude()));
+
+                LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
+                map.addMarker(new MarkerOptions().position(coordenadas));
             }
-
-        } catch (SecurityException e){
-            Log.e("Exception", e.getMessage());
-        }
+        }).getLocalizacao();
     }
 
     public void solicitarAtendimentoClick(View view) {
@@ -195,7 +212,6 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                     descricaoLocalizacao, local.getLatitude(), local.getLongitude());
 
 
-            ocorrenciaFirebaseController.create(ocorrencia);
             ocorrenciaController.create(ocorrencia);
 
             final Ocorrencia ocorr = ocorrencia;
@@ -207,16 +223,42 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            Intent intent = new Intent(OcorrenciaActivity.this, MapsDetalheOcorrenciaActivity.class);
-                            intent.putExtra("ocorrencia", ocorr);
-                            startActivity(intent);
-                            finish();
+                            abrirTelaDetalhesOcorrencia(ocorr);
                         }
                     }).create().show();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void abrirTelaDetalhesOcorrencia(Ocorrencia ocorrencia){
+        Intent intent = new Intent(this, MapsDetalheOcorrenciaActivity.class)
+                .putExtra("ocorrencia", ocorrencia);
+        startActivity(intent);
+        finish();
+    }
+
+    public void cadastrarOcorrenciaClick(View view) {
+        try {
+            Usuario usuario = usuarioController.getUsuario();
+            String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
+            String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
+
+            OcorrenciaPreCadastrada ocorrencia = new OcorrenciaPreCadastrada(tipoOcorrenciaSelecionado, descricaoOcorrencia,
+                    descricaoLocalizacao);
+
+            ocorrenciaPreCadastradaController.create(ocorrencia);
+
+            Toast.makeText(this, "Ocorrência cadastrada", Toast.LENGTH_LONG).show();
+
+            startActivity(new Intent(this, ListaOcorrenciasPreCadastradasActivity.class));
+            finish();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @DatabaseTable(tableName = "ocorrencia")
-@IgnoreExtraProperties
 public class Ocorrencia implements Serializable {
 
     @DatabaseField(generatedId = true)
@@ -30,7 +29,7 @@ public class Ocorrencia implements Serializable {
     @DatabaseField(columnName = "data_ocorrencia")
     private String dataOcorrencia;
     @DatabaseField
-    private Integer status = 1;
+    private Integer status = 0;
     @DatabaseField(columnName = "id_atendente", foreign = true, foreignColumnName = "id")
     private Atendente atendente;
     @DatabaseField(columnName = "mensagem_atendente")
@@ -153,6 +152,23 @@ public class Ocorrencia implements Serializable {
     }
 
     public Integer getStatus() {
+        return status;
+    }
+
+    public String getDescricaoStatus(){
+        String status = new String();
+        switch(this.status){
+            case 0:
+                status = "Pendente";
+                break;
+            case 2:
+                status = "Atendida";
+                break;
+            case 3:
+                status = "Finalizada";
+                break;
+        }
+
         return status;
     }
 

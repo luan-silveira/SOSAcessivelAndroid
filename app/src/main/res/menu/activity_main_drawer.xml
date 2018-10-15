@@ -16,7 +16,7 @@
             android:title="Alterar cadastro"
             android:icon="@drawable/ic_alterar_cadastro"/>
 
-        <item android:id="@+id/menu_ocorerncia_predef"
+        <item android:id="@+id/menu_ocorrencia_predef"
             android:title="Ocorrências pré-definidas"
             android:icon="@drawable/ic_ocorrencia_predef" />
     </group>

@@ -63,6 +63,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public void salvarClick(View view) {

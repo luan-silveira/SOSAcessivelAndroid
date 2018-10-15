@@ -54,7 +54,7 @@ public class ListaOcorrenciasActivity extends AppCompatActivity {
                         }
                     } else {
                         try {
-                            listaOcorrencias = (ArrayList<Ocorrencia>) ocorrenciaController.getListaOcorrenciasPorStatus(position);
+                            listaOcorrencias = (ArrayList<Ocorrencia>) ocorrenciaController.getListaOcorrenciasPorStatus(position - 1);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

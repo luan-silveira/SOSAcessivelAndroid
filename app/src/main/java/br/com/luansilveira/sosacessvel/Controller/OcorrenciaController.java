@@ -2,6 +2,8 @@ package br.com.luansilveira.sosacessvel.Controller;
 
 import android.content.Context;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.PreparedQuery;
 
@@ -28,5 +30,17 @@ public class OcorrenciaController extends BaseDaoImpl<Ocorrencia, Integer> {
 
     public List<Ocorrencia> getListaOcorrenciasPorStatus(Integer status) throws SQLException {
         return this.queryForEq("status", status);
+    }
+
+    @Override
+    public int create(Ocorrencia ocorrencia) throws SQLException {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ocorrencias").push();
+        ocorrencia.setKey(dbRef.getKey());
+
+        int retorno = super.create(ocorrencia);
+
+        dbRef.setValue(ocorrencia);
+
+        return retorno;
     }
 }

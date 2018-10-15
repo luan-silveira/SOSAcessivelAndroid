@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtDescricaoOcorrencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descricao ocorrencia"
+        android:textColor="#000000"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:textSize="16dp"/>
+    <TextView
+        android:id="@+id/txtTipoOcorrencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:textColor="#131313"
+        android:text="Tipo ocorrencia"/>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginTop="5dp"/>
+
+</LinearLayout>

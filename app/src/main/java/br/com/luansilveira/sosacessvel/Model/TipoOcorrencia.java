@@ -14,6 +14,8 @@ public class TipoOcorrencia implements Serializable {
     private String descricao;
     @DatabaseField(columnName = "id_classificacao_ocorrencia", foreign = true, foreignColumnName = "id")
     private ClassificacaoOcorrencia classificacao;
+    @DatabaseField(columnName = "id_instituicao_orgao")
+    private Integer idInstituicaoOrgao;
 
     public TipoOcorrencia() {
     }
@@ -46,6 +48,31 @@ public class TipoOcorrencia implements Serializable {
 
     public void setClassificacaoOcorrencia(ClassificacaoOcorrencia classificacao) {
         this.classificacao = classificacao;
+    }
+
+    public Integer getIdInstituicaoOrgao() {
+        return idInstituicaoOrgao;
+    }
+
+    public String getNomeInstituicao(){
+        String instituicao = new String();
+        switch (idInstituicaoOrgao){
+            case 1:
+                instituicao = "Corpo de Bombeiros Militar";
+                break;
+            case 2:
+                instituicao = "Polícia Militar";
+                break;
+            case 3:
+                instituicao = "Serviço de Atendimento Móvel de Urgência";
+                break;
+        }
+
+        return instituicao;
+    }
+
+    public void setIdInstituicaoOrgao(Integer idInstituicaoOrgao) {
+        this.idInstituicaoOrgao = idInstituicaoOrgao;
     }
 
     @Override

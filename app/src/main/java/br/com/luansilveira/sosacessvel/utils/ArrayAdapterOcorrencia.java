@@ -32,8 +32,13 @@ public class ArrayAdapterOcorrencia extends ArrayAdapter<Ocorrencia> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+        final int RED = Color.rgb(175,0,0);
+        final int GREEN = Color.rgb(0,132,0);
+        final int BLUE = Color.rgb(0,0,142);
+
         Ocorrencia ocorrencia = lista.get(position);
-        int colorShape = Color.RED;
+        int colorShape = RED;
         String status = "Status: ";
 
         convertView = LayoutInflater.from(this.context).inflate(R.layout.listview_ocorrencia, null);
@@ -47,25 +52,18 @@ public class ArrayAdapterOcorrencia extends ArrayAdapter<Ocorrencia> {
         textoDataHora.setText(txtData);
 
         switch(ocorrencia.getStatus()){
+            case 0:
+                colorShape = RED;
+                break;
             case 1:
-                colorShape = Color.RED;
-                status += "Aguardando atendimento";
+                colorShape = BLUE;
                 break;
             case 2:
-                colorShape = Color.YELLOW;
-                status += "Atendida";
-                break;
-            case 3:
-                colorShape = Color.BLUE;
-                status += "Socorro enviado";
-                break;
-            case 4:
-                colorShape = Color.GREEN;
-                status += "Finalizada";
+                colorShape = GREEN;
                 break;
         }
 
-        textoStatus.setText(status);
+        textoStatus.setText("Status: " + ocorrencia.getDescricaoStatus());
         setColorShape(shape, colorShape);
 
         return convertView;

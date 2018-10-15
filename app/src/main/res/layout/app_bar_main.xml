@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -22,16 +23,48 @@
 
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_width="wrap_content"
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:backgroundTint="@color/colorPrimary"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--app:srcCompat="@drawable/ic_plus_button"-->
+        <!--android:onClick="novaOcorrenciaClick"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_plus_button"
-        android:onClick="novaOcorrenciaClick"/>
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="50dp">
 
-    <include layout="@layout/content_main" />
+        <Button
+            android:id="@+id/btNovaOcorrencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:backgroundTint="@color/colorPrimary"
+            android:drawableStart="@mipmap/ic_nova_ocorrencia"
+            android:onClick="novaOcorrenciaClick"
+            android:textColor="#ffffff"
+            android:text="Nova Ocorrência" />
 
-</android.support.design.widget.CoordinatorLayout>
+        <Button
+            android:id="@+id/ocorrenciasPreCadastradas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btNovaOcorrencia"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#32ffffff"
+            android:drawableStart="@mipmap/ic_nova_ocorrencia"
+            android:onClick="ocorrenciaPreCadastradaClick"
+            android:text="Enviar ocorrência pré-cadastrada" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
+
+</RelativeLayout>
