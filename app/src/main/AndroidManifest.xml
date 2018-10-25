@@ -33,7 +33,6 @@
             android:label="@string/title_activity_maps_detalhe_ocorrencia" />
         <activity android:name=".ListaOcorrenciasActivity" />
         <activity android:name=".ListaOcorrenciasPreCadastradasActivity" />
-        <activity android:name=".OcorrenciaPreCadastradaActivity"></activity>
     </application>
 
 </manifest>

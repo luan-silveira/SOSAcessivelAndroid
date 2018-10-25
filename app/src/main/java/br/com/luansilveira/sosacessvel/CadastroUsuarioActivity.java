@@ -19,6 +19,7 @@ import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
 import br.com.luansilveira.sosacessvel.FirebaseController.UserFirebaseController;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.DB;
+import br.com.luansilveira.sosacessvel.utils.MaskEditUtil;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
@@ -48,6 +49,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         edEndereco = findViewById(R.id.edEndereco);
         edInfMedicas = findViewById(R.id.edInfMedicas);
 
+        edDataNascimento.addTextChangedListener(MaskEditUtil.mask(edDataNascimento, MaskEditUtil.FORMAT_DATE));
+
         this.editarUsuario = getIntent().getBooleanExtra("editar_usuario", false);
 
         try {
@@ -67,6 +70,8 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     }
 
     public void salvarClick(View view) {
+        if(!validarCampos()) return;
+
         Usuario usuario = this.popularUsuario();
 
         try {
@@ -141,5 +146,33 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean validarCampos(){
+        if(edNome.getText().toString().trim().isEmpty()){
+            edNome.setError(getString(R.string.erroNomeNulo));
+            edNome.requestFocus();
+            return false;
+        }
+
+        if(edDataNascimento.getText().toString().trim().isEmpty()){
+            edDataNascimento.setError(getString(R.string.erroDataNascimentoNula));
+            edDataNascimento.requestFocus();
+            return false;
+        }
+
+        if(!edDataNascimento.getText().toString().matches("^\\d{2}/\\d{2}/\\d{4}$")) {
+            edDataNascimento.setError(getString(R.string.erroDataNascimentoInvalida));
+            edDataNascimento.requestFocus();
+            return false;
+        }
+
+        if(edEndereco.getText().toString().trim().isEmpty()){
+            edEndereco.setError(getString(R.string.erroEnderecoNulo));
+            edEndereco.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 }

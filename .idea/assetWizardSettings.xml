@@ -121,9 +121,9 @@
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="cropped" value="true" />
-                                      <entry key="iconShape" value="CIRCLE" />
-                                      <entry key="imageAsset" value="C:\Luan\AndroidStudio\SOSAcessivel\Imagens\nova_ocorrencia.png" />
-                                      <entry key="outputName" value="ic_nova_ocorrencia" />
+                                      <entry key="iconShape" value="NONE" />
+                                      <entry key="imageAsset" value="C:\Luan\AndroidStudio\SOSAcessivel\Imagens\bloqueado.png" />
+                                      <entry key="outputName" value="ic_bloqueado" />
                                     </map>
                                   </option>
                                 </PersistentState>

@@ -161,10 +161,10 @@ public class Ocorrencia implements Serializable {
             case 0:
                 status = "Pendente";
                 break;
-            case 2:
+            case 1:
                 status = "Atendida";
                 break;
-            case 3:
+            case 2:
                 status = "Finalizada";
                 break;
         }

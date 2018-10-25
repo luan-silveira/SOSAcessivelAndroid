@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.luansilveira.sosacessvel">
+
+    <application>
+        <activity android:name="br.com.luansilveira.sosacessvel.UsuarioBloqueadoActivity"></activity>
+    </application>
+</manifest>

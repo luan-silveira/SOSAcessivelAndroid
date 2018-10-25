@@ -33,6 +33,8 @@ public class Usuario implements Serializable {
     private String endereco;
     @DatabaseField(columnName = "inf_medicas")
     private String infMedicas;
+    @DatabaseField(columnName = "is_bloqueado")
+    private boolean isBloqueado;
 
     public Usuario() {
     }
@@ -129,5 +131,13 @@ public class Usuario implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public boolean getIsBloqueado() {
+        return isBloqueado;
+    }
+
+    public void setIsBloqueado(boolean bloqueado) {
+        isBloqueado = bloqueado;
     }
 }

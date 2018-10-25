@@ -25,6 +25,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Model.Atendente;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
+import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.ArrayAdapterOcorrenciaPre;
 import br.com.luansilveira.sosacessvel.utils.Geolocalizacao;
 import br.com.luansilveira.sosacessvel.utils.Notify;
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity
     protected OcorrenciaController ocorrenciaCtrl;
     protected AtendenteController atendenteCtrl;
     protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
-    protected ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,27 +70,50 @@ public class MainActivity extends AppCompatActivity
         this.solicitarPermissoes();
 
         try {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
             userCtrl = new UsuarioController(this);
             ocorrenciaCtrl = new OcorrenciaController(this);
             atendenteCtrl = new AtendenteController(this);
 
-            FirebaseDatabase.getInstance().getReference("ocorrencias").orderByChild("usuario/key").equalTo(userCtrl.getUsuario().getKey())
+            database.getReference("usuarios/" + userCtrl.getUsuario().getKey())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            try {
+                                Usuario usuario = dataSnapshot.getValue(Usuario.class);
+                                userCtrl.update(usuario);
+
+                                if(usuario.getIsBloqueado()){
+                                    abrirTelaBloqueio();
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+            database.getReference("ocorrencias").orderByChild("usuario/key").equalTo(userCtrl.getUsuario().getKey())
                     .addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {}
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            try{
+                                sincronizarOcorrencia(dataSnapshot);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                             try {
-                                Ocorrencia ocorrencia = dataSnapshot.getValue(Ocorrencia.class);
-                                Atendente atendente = ocorrencia.getAtendente();
+                                Ocorrencia ocorrencia =  sincronizarOcorrencia(dataSnapshot);
 
-                                if(atendente != null){
-                                    atendenteCtrl.createIfNotExists(atendente);
-                                }
-                                int retorno = ocorrenciaCtrl.update(ocorrencia);
-
-                                if (retorno == 1) {
+                                if (ocorrencia != null) {
                                     Toast.makeText(MainActivity.this, "Ocorrencia "+ ocorrencia.getId()
                                             + " alterada.", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
@@ -114,10 +138,35 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onCancelled(DatabaseError databaseError) {}
                     });
+
+            if(userCtrl.getUsuario().getIsBloqueado()){
+                abrirTelaBloqueio();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public Ocorrencia sincronizarOcorrencia(DataSnapshot dataSnapshot) throws SQLException {
+        Ocorrencia ocorrencia = dataSnapshot.getValue(Ocorrencia.class);
+        Atendente atendente = ocorrencia.getAtendente();
+
+        if(atendente != null){
+            atendenteCtrl.createIfNotExists(atendente);
+        }
+        if(ocorrenciaCtrl.update(ocorrencia) != 1) return null;
+
+        return ocorrencia;
+    }
+
+    public void abrirTelaBloqueio(){
+        Intent intent = new Intent(MainActivity.this, UsuarioBloqueadoActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+        finishAffinity();
     }
 
     @Override

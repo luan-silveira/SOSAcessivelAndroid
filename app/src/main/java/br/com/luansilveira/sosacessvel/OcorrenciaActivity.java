@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
@@ -63,6 +64,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     EditText edDescricaoLocalizacao;
 
     private boolean cadastrarOcorrencia;
+    private OcorrenciaPreCadastrada ocorrencia;
     private ClassificacaoOcorrenciaController classificacaoController;
     private TipoOcorrenciaController tipoController;
     private UsuarioController usuarioController;
@@ -92,6 +94,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         actionBar.setHomeButtonEnabled(true);
 
         cadastrarOcorrencia = this.getIntent().getBooleanExtra("cadastrarOcorrencia", false);
+        ocorrencia = (OcorrenciaPreCadastrada) this.getIntent().getSerializableExtra("ocorrencia");
+        if(ocorrencia != null) cadastrarOcorrencia = true;
 
         spClassifOcorrencias = findViewById(R.id.classifOcorrencias);
         spTipoOcorrencias = findViewById(R.id.tipoOcorrencias);
@@ -105,6 +109,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         LinearLayout layoutLocalizacao = findViewById(R.id.layoutLocalizacao);
         Button btSolicitarAtendimento = findViewById(R.id.btSolicitarAtendimento);
         Button btCadastrarOcorrencia = findViewById(R.id.btCadastrarOcorrencia);
+
+        if(ocorrencia != null) cadastrarOcorrencia = true;
 
         if(this.cadastrarOcorrencia){
             layoutLocalizacao.setVisibility(View.GONE);
@@ -157,6 +163,22 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
         if(!this.cadastrarOcorrencia && geolocalizacao.isPermissaoLocalizacao()) getLocalizacao();
 
+        if(ocorrencia != null) this.popularCampos();
+
+    }
+
+    private boolean validarDescricaoOcorrencia(){
+        boolean ok = true;
+
+        if(tipoOcorrenciaSelecionado.getDescricao().equals("Outros")){
+            ok = !(edDescricaoOcorrencia.getText().toString().trim().isEmpty());
+            if (!ok){
+                edDescricaoOcorrencia.setError(getString(R.string.erroDescricaoOcorrenciaObrigatoria));
+                edDescricaoOcorrencia.requestFocus();
+            }
+        }
+
+        return ok;
     }
 
     protected void popularSpinner(Spinner spinner, List<?> lista){
@@ -178,12 +200,6 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         return super.onOptionsItemSelected(item);
     }
 
-//    protected boolean isPermissaoLocalizacao(){
-//        return ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-//                        PackageManager.PERMISSION_GRANTED) ||
-//                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-//                        PackageManager.PERMISSION_GRANTED));
-//    }
 
     protected void getLocalizacao(){
 
@@ -202,6 +218,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void solicitarAtendimentoClick(View view) {
+        if(!validarDescricaoOcorrencia()) return;
 
         try {
             Usuario usuario = usuarioController.getUsuario();
@@ -241,6 +258,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void cadastrarOcorrenciaClick(View view) {
+        if(!validarDescricaoOcorrencia()) return;
+
         try {
             Usuario usuario = usuarioController.getUsuario();
             String descricaoOcorrencia = edDescricaoOcorrencia.getText().toString();
@@ -249,14 +268,48 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             OcorrenciaPreCadastrada ocorrencia = new OcorrenciaPreCadastrada(tipoOcorrenciaSelecionado, descricaoOcorrencia,
                     descricaoLocalizacao);
 
-            ocorrenciaPreCadastradaController.create(ocorrencia);
+            if(this.ocorrencia != null){
+                ocorrencia.setId(this.ocorrencia.getId());
+                ocorrenciaPreCadastradaController.update(ocorrencia);
 
-            Toast.makeText(this, "Ocorrência cadastrada", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Ocorrência alterada", Toast.LENGTH_LONG).show();
+            } else {
+                ocorrenciaPreCadastradaController.create(ocorrencia);
+
+                Toast.makeText(this, "Ocorrência cadastrada", Toast.LENGTH_LONG).show();
+            }
 
             startActivity(new Intent(this, ListaOcorrenciasPreCadastradasActivity.class));
             finish();
 
         } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void popularCampos(){
+        edDescricaoOcorrencia.setText(ocorrencia.getDescricao());
+        edDescricaoLocalizacao.setText(ocorrencia.getLocalizacao());
+        tipoOcorrenciaSelecionado = ocorrencia.getTipoOcorrencia();
+        this.selecionarCampo(spClassifOcorrencias, ocorrencia.getTipoOcorrencia().getClassificacaoOcorrencia());
+        this.selecionarCampo(spTipoOcorrencias, tipoOcorrenciaSelecionado);
+    }
+
+    private void selecionarCampo(Spinner spinner, Object data){
+
+        try {
+            for (int id = 0; id < spinner.getCount(); id++) {
+                Object obj = spinner.getItemAtPosition(id);
+                if ((int) obj.getClass().getMethod("getId").invoke(obj) == (int) data.getClass().getMethod("getId").invoke(data)) {
+                    spinner.setSelection(id);
+                    break;
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
