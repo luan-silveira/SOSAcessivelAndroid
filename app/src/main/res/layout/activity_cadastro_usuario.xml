@@ -66,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
+                android:id="@+id/rbTipoA"
                 android:layout_marginLeft="10dp"/>
             <RadioButton
                 android:layout_width="wrap_content"
@@ -94,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Positivo"
+                android:id="@+id/rbTipoPositivo"
                 android:layout_marginLeft="10dp"/>
 
             <RadioButton

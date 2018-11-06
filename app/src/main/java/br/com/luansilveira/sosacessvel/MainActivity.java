@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -30,11 +29,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import br.com.luansilveira.sosacessvel.Controller.AtendenteController;
+import br.com.luansilveira.sosacessvel.Controller.InstituicaoController;
 import br.com.luansilveira.sosacessvel.Controller.OcorrenciaController;
 import br.com.luansilveira.sosacessvel.Controller.OcorrenciaPreCadastradaController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
-import br.com.luansilveira.sosacessvel.Model.Atendente;
+import br.com.luansilveira.sosacessvel.Model.InstituicaoAtendimento;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     protected UsuarioController userCtrl;
     protected OcorrenciaController ocorrenciaCtrl;
-    protected AtendenteController atendenteCtrl;
+    protected InstituicaoController instituicaoCtrl;
     protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
 
     @Override
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             userCtrl = new UsuarioController(this);
             ocorrenciaCtrl = new OcorrenciaController(this);
-            atendenteCtrl = new AtendenteController(this);
+            instituicaoCtrl = new InstituicaoController(this);
 
             database.getReference("usuarios/" + userCtrl.getUsuario().getKey())
                     .addValueEventListener(new ValueEventListener() {
@@ -114,8 +113,8 @@ public class MainActivity extends AppCompatActivity
                                 Ocorrencia ocorrencia =  sincronizarOcorrencia(dataSnapshot);
 
                                 if (ocorrencia != null) {
-                                    Toast.makeText(MainActivity.this, "Ocorrencia "+ ocorrencia.getId()
-                                            + " alterada.", Toast.LENGTH_LONG).show();
+                                    /*Toast.makeText(MainActivity.this, "Ocorrencia "+ ocorrencia.getId()
+                                            + " alterada.", Toast.LENGTH_LONG).show();*/
                                     Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
                                     intent.putExtra("ocorrencia", ocorrencia);
                                     Notify.criarNotificacao(MainActivity.this, intent, R.drawable.ic_notificacao_emergencia,
@@ -151,10 +150,10 @@ public class MainActivity extends AppCompatActivity
 
     public Ocorrencia sincronizarOcorrencia(DataSnapshot dataSnapshot) throws SQLException {
         Ocorrencia ocorrencia = dataSnapshot.getValue(Ocorrencia.class);
-        Atendente atendente = ocorrencia.getAtendente();
+        InstituicaoAtendimento instituicao = ocorrencia.getInstituicao();
 
-        if(atendente != null){
-            atendenteCtrl.createIfNotExists(atendente);
+        if(instituicao != null){
+            instituicaoCtrl.createIfNotExists(instituicao);
         }
         if(ocorrenciaCtrl.update(ocorrencia) != 1) return null;
 

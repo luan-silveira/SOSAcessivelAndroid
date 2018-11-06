@@ -13,6 +13,7 @@
     <string name="erroEnderecoNulo">Endereço obrigatório!</string>
     <string name="erroDataNascimentoNula">Data de nascimento obrigatória!</string>
     <string name="erroDataNascimentoInvalida">Data de nascimento inválida!</string>
+    <string name="erroDataNascimentoMaiorQueHoje">Data de nascimento não pode ser maior que hoje!</string>
     <string name="erroDescricaoOcorrenciaObrigatoria">Descrição obrigatória para o tipo "Outros!"</string>
 
     <string-array name="classificacoes_ocorrencias">

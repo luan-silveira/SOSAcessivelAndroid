@@ -26,8 +26,8 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
     private TextView txtStatus;
     private TextView txtDescricaoOcorrencia;
     private TextView txtDescricaoLocalizacao;
-    private TextView txtAtendente;
     private TextView txtInstituicaoAtendimento;
+    private TextView txtDataAtendimento;
     private TextView txtMensagemAtendente;
 
     private Ocorrencia ocorrencia;
@@ -56,9 +56,9 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         txtStatus.setText(ocorrencia.getDescricaoStatus());
         txtDescricaoOcorrencia.setText(ocorrencia.getDescricao());
         txtDescricaoLocalizacao.setText(ocorrencia.getLocalizacao());
-        if (ocorrencia.getAtendente() != null) {
-            txtInstituicaoAtendimento.setText(ocorrencia.getAtendente().getInstituicao());
-            txtAtendente.setText(ocorrencia.getAtendente().getNome());
+        if (ocorrencia.getInstituicao() != null) {
+            txtInstituicaoAtendimento.setText(ocorrencia.getInstituicao().getNome());
+            txtDataAtendimento.setText(ocorrencia.getDataAtendimento());
             txtMensagemAtendente.setText(ocorrencia.getMensagemAtendente());
         } else {
             layoutAtendimento.setVisibility(View.GONE);
@@ -105,8 +105,8 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         txtStatus = (TextView) findViewById(R.id.txt_detalhe_status);
         txtDescricaoOcorrencia = (TextView) findViewById(R.id.txt_detalhe_descricao);
         txtDescricaoLocalizacao = (TextView) findViewById(R.id.txt_detalhe_desc_localizacao);
-        txtAtendente = (TextView) findViewById(R.id.txt_detalhe_atendente);
         txtInstituicaoAtendimento = (TextView) findViewById(R.id.txt_instituicao_atendimento);
+        txtDataAtendimento = (TextView) findViewById(R.id.txt_dataAtendimento);
         txtMensagemAtendente = (TextView) findViewById(R.id.txt_detalhe_mensagemAtendente);
     }
 

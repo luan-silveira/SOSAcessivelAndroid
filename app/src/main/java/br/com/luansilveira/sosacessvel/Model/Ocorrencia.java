@@ -28,10 +28,12 @@ public class Ocorrencia implements Serializable {
     private Double longitude;
     @DatabaseField(columnName = "data_ocorrencia")
     private String dataOcorrencia;
+    @DatabaseField(columnName = "data_atendimento")
+    private String dataAtendimento;
     @DatabaseField
     private Integer status = 0;
-    @DatabaseField(columnName = "id_atendente", foreign = true, foreignColumnName = "id")
-    private Atendente atendente;
+    @DatabaseField(columnName = "id_instituicao", foreign = true, foreignColumnName = "id")
+    private InstituicaoAtendimento instituicao;
     @DatabaseField(columnName = "mensagem_atendente")
     private String mensagemAtendente;
 
@@ -151,6 +153,23 @@ public class Ocorrencia implements Serializable {
         }
     }
 
+    public String getDataAtendimento() {
+        return dataAtendimento;
+    }
+
+    public void setDataAtendimento(String dataAtendimento) {
+        Date data = new Date();
+        try {
+            if ((!dataAtendimento.trim().isEmpty()) && (dataAtendimento != null)) {
+                data = dateFormat.parse(dataAtendimento);
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        } finally {
+            this.dataAtendimento = dateFormat.format(data);
+        }
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -176,12 +195,12 @@ public class Ocorrencia implements Serializable {
         this.status = status;
     }
 
-    public Atendente getAtendente() {
-        return atendente;
+    public InstituicaoAtendimento getInstituicao() {
+        return instituicao;
     }
 
-    public void setAtendente(Atendente atendente) {
-        this.atendente = atendente;
+    public void setInstituicao(InstituicaoAtendimento instituicao) {
+        this.instituicao = instituicao;
     }
 
     public String getMensagemAtendente() {

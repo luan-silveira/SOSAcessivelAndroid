@@ -34,7 +34,7 @@ public class Usuario implements Serializable {
     @DatabaseField(columnName = "inf_medicas")
     private String infMedicas;
     @DatabaseField(columnName = "is_bloqueado")
-    private boolean isBloqueado;
+    private boolean isBloqueado = false;
 
     public Usuario() {
     }

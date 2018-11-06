@@ -122,20 +122,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Atendido por"
-                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="3dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="atendente"
-                android:id="@+id/txt_detalhe_atendente"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Mensagem"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                 android:layout_marginTop="10dp"
@@ -146,6 +132,20 @@
                 android:layout_height="wrap_content"
                 android:text="mensagem"
                 android:id="@+id/txt_detalhe_mensagemAtendente"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data de atendimento"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="3dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="data_atendimento"
+                android:id="@+id/txt_dataAtendimento"
                 />
         </LinearLayout>
 

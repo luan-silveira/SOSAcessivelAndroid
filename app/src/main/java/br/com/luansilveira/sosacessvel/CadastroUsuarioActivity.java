@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Enum.Rh;
@@ -48,6 +49,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         rgRhSanguineo =  findViewById(R.id.rgRHSanguineo);
         edEndereco = findViewById(R.id.edEndereco);
         edInfMedicas = findViewById(R.id.edInfMedicas);
+
+        ((RadioButton) findViewById(R.id.rbTipoA)).setChecked(true);
+        ((RadioButton) findViewById(R.id.rbTipoPositivo)).setChecked(true);
 
         edDataNascimento.addTextChangedListener(MaskEditUtil.mask(edDataNascimento, MaskEditUtil.FORMAT_DATE));
 
@@ -149,6 +153,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     }
 
     public boolean validarCampos(){
+        SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy");
+        format.setLenient(false);
+
         if(edNome.getText().toString().trim().isEmpty()){
             edNome.setError(getString(R.string.erroNomeNulo));
             edNome.requestFocus();
@@ -162,6 +169,19 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         }
 
         if(!edDataNascimento.getText().toString().matches("^\\d{2}/\\d{2}/\\d{4}$")) {
+            edDataNascimento.setError(getString(R.string.erroDataNascimentoInvalida));
+            edDataNascimento.requestFocus();
+            return false;
+        }
+
+        try{
+            Date data = format.parse(edDataNascimento.getText().toString());
+            if (data.after(new Date())){
+                edDataNascimento.setError(getString(R.string.erroDataNascimentoMaiorQueHoje));
+                edDataNascimento.requestFocus();
+                return false;
+            }
+        } catch (ParseException e){
             edDataNascimento.setError(getString(R.string.erroDataNascimentoInvalida));
             edDataNascimento.requestFocus();
             return false;

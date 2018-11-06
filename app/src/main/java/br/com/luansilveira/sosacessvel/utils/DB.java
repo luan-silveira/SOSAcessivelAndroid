@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 
-import br.com.luansilveira.sosacessvel.Model.Atendente;
 import br.com.luansilveira.sosacessvel.Model.ClassificacaoOcorrencia;
+import br.com.luansilveira.sosacessvel.Model.InstituicaoAtendimento;
 import br.com.luansilveira.sosacessvel.Model.Ocorrencia;
 import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
@@ -37,7 +37,7 @@ public class DB extends OrmLiteSqliteOpenHelper{
             TableUtils.createTableIfNotExists(connectionSource, ClassificacaoOcorrencia.class);
             TableUtils.createTableIfNotExists(connectionSource, TipoOcorrencia.class);
             TableUtils.createTableIfNotExists(connectionSource, Usuario.class);
-            TableUtils.createTableIfNotExists(connectionSource, Atendente.class);
+            TableUtils.createTableIfNotExists(connectionSource, InstituicaoAtendimento.class);
             TableUtils.createTableIfNotExists(connectionSource, Ocorrencia.class);
             TableUtils.createTableIfNotExists(connectionSource, OcorrenciaPreCadastrada.class);
         } catch (SQLException e) {
