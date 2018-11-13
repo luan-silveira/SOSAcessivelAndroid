@@ -6,9 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ListaOcorrenciasPreCadastradasActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/txt_sem_ocorrencias_pre"
+        android:text="Não há ocorrências cadastradas.\nClique no botão (+)"
+        android:layout_marginTop="18dp"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        />
+
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="20dp"
         android:src="@drawable/ic_plus_button"
         android:backgroundTint="@color/colorPrimary"

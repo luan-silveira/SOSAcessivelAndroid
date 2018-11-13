@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -64,7 +65,10 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);   
+        navigationView.setNavigationItemSelectedListener(this);
+
+        TextView txtNomeUsuario = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_nome_usuario);
+
 
         this.solicitarPermissoes();
 
@@ -73,6 +77,11 @@ public class MainActivity extends AppCompatActivity
             userCtrl = new UsuarioController(this);
             ocorrenciaCtrl = new OcorrenciaController(this);
             instituicaoCtrl = new InstituicaoController(this);
+
+            Usuario usuario = userCtrl.getUsuario();
+            String texto = "Usuário: " + usuario.getNome().toString() + " - " + usuario.getTipoSanguineo().toString() +
+                    (usuario.getRhSanguineo().toString() == "P" ? "+" : "-");
+            txtNomeUsuario.setText(texto);
 
             database.getReference("usuarios/" + userCtrl.getUsuario().getKey())
                     .addValueEventListener(new ValueEventListener() {
@@ -97,42 +106,31 @@ public class MainActivity extends AppCompatActivity
                     });
 
             database.getReference("ocorrencias").orderByChild("usuario/key").equalTo(userCtrl.getUsuario().getKey())
-                    .addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            try{
-                                sincronizarOcorrencia(dataSnapshot);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                    .addValueEventListener(new ValueEventListener() {
 
                         @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            try {
-                                Ocorrencia ocorrencia =  sincronizarOcorrencia(dataSnapshot);
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                if (ocorrencia != null) {
-                                    /*Toast.makeText(MainActivity.this, "Ocorrencia "+ ocorrencia.getId()
-                                            + " alterada.", Toast.LENGTH_LONG).show();*/
-                                    Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
-                                    intent.putExtra("ocorrencia", ocorrencia);
-                                    Notify.criarNotificacao(MainActivity.this, intent, R.drawable.ic_notificacao_emergencia,
-                                            "Ocorrência atendida",
-                                            "A ocorrência foi atendida.");
+                                try {
+                                    Ocorrencia ocorrencia = sincronizarOcorrencia(snapshot);
+
+                                    if (ocorrencia != null) {
+                                        /*Toast.makeText(MainActivity.this, "Ocorrencia " + ocorrencia.getId()
+                                                + " alterada.", Toast.LENGTH_LONG).show();*/
+                                        Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
+                                        intent.putExtra("ocorrencia", ocorrencia);
+                                        Notify.criarNotificacao(MainActivity.this, intent, R.drawable.ic_notificacao_emergencia,
+                                                "Ocorrência atendida",
+                                                "A ocorrência foi atendida.");
+                                    }
+                                } catch (SQLException e) {
+                                    Toast.makeText(MainActivity.this, "Erro de sincronização", Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (SQLException e) {
-                                Toast.makeText(MainActivity.this, "Erro de sincronização", Toast.LENGTH_LONG).show();
-                            } catch (Exception e){
-                                e.printStackTrace();
                             }
                         }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {}
@@ -155,6 +153,7 @@ public class MainActivity extends AppCompatActivity
         if(instituicao != null){
             instituicaoCtrl.createIfNotExists(instituicao);
         }
+
         if(ocorrenciaCtrl.update(ocorrencia) != 1) return null;
 
         return ocorrencia;

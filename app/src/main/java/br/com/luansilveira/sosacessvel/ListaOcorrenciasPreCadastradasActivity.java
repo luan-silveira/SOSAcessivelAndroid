@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -28,6 +29,7 @@ public class ListaOcorrenciasPreCadastradasActivity extends AppCompatActivity {
 
     private ArrayList<OcorrenciaPreCadastrada> listaOcorrencias;
     private ArrayAdapterOcorrenciaPre adapter;
+    TextView txtVazio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +42,13 @@ public class ListaOcorrenciasPreCadastradasActivity extends AppCompatActivity {
         toolbar.setDisplayHomeAsUpEnabled(true);
         toolbar.setHomeButtonEnabled(true);
 
-
+        txtVazio = findViewById(R.id.txt_sem_ocorrencias_pre);
 
         try {
             listaOcorrencias =(ArrayList<OcorrenciaPreCadastrada>) (new OcorrenciaPreCadastradaController(this)).getListaOcorrencias();
             adapter = new ArrayAdapterOcorrenciaPre(this, listaOcorrencias);
+
+            txtVazio.setVisibility(listaOcorrencias.size() == 0 ? View.VISIBLE : View.GONE);
 
             ListView listViewOcorencias = findViewById(R.id.listaOcorrenciasPreCadastradas);
             listViewOcorencias.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -98,6 +102,7 @@ public class ListaOcorrenciasPreCadastradasActivity extends AppCompatActivity {
             if (controller.delete(ocorrencia) == 1){
                 listaOcorrencias.remove(ocorrencia);
                 adapter.notifyDataSetChanged();
+                if(listaOcorrencias.size() == 0) txtVazio.setVisibility(View.VISIBLE);
                 Toast.makeText(this, "Ocorrência removida", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Erro ao excluir", Toast.LENGTH_LONG).show();
