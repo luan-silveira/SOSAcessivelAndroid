@@ -281,6 +281,20 @@ public class MainActivity extends AppCompatActivity
                                             public void onLocalizacaoEncontrada(Location local) {
                                                 enviarOcorrenciaPreCadastrada(ocorrencia, local);
                                             }
+
+                                            @Override
+                                            public void onFalhaEncontrarLocalizacao() {
+                                                (new AlertDialog.Builder(MainActivity.this))
+                                                        .setTitle("Atenção")
+                                                        .setMessage("Não foi possível obter a localização atual. A localização não será enviada." +
+                                                                "\nSendo assim, é de suma importância informar a descrição da localização, ou o endereço, para facilitar no atendimento.")
+                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                enviarOcorrenciaPreCadastrada(ocorrencia, null);
+                                                            }
+                                                        }).show();
+                                            }
                                         });
                                 geo.getLocalizacao();
                             }
@@ -310,8 +324,8 @@ public class MainActivity extends AppCompatActivity
                     ocorrenciaPreCadastrada.getTipoOcorrencia(),
                     ocorrenciaPreCadastrada.getDescricao(),
                     ocorrenciaPreCadastrada.getLocalizacao(),
-                    local.getLatitude(),
-                    local.getLongitude());
+                    local == null ? null : local.getLatitude(),
+                    local == null ? null : local.getLongitude());
 
             ocorrenciaCtrl.create(ocorrencia);
 

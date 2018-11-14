@@ -214,6 +214,15 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
                 map.addMarker(new MarkerOptions().position(coordenadas));
             }
+
+            @Override
+            public void onFalhaEncontrarLocalizacao() {
+                (new AlertDialog.Builder(OcorrenciaActivity.this))
+                        .setTitle("Atenção")
+                        .setMessage("Não foi possível obter a localização atual. A localização não será enviada." +
+                                "\nSendo assim, é de suma importância informar a descrição da localização, ou o endereço, para facilitar no atendimento.")
+                        .setPositiveButton("OK", null).show();
+            }
         }).getLocalizacao();
     }
 
@@ -226,15 +235,15 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             String descricaoLocalizacao = edDescricaoLocalizacao.getText().toString();
 
             Ocorrencia ocorrencia = new Ocorrencia(usuario, tipoOcorrenciaSelecionado, descricaoOcorrencia,
-                    descricaoLocalizacao, local.getLatitude(), local.getLongitude());
+                    descricaoLocalizacao, local == null ? null : local.getLatitude(), local == null ? null : local.getLongitude());
 
 
             ocorrenciaController.create(ocorrencia);
 
             final Ocorrencia ocorr = ocorrencia;
 
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("Ocorrência solicitada")
+            (new AlertDialog.Builder(this))
+            .setTitle("Ocorrência solicitada")
                     .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -319,6 +328,14 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         map = googleMap;
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                geolocalizacao.getLocalizacao();
+                return true;
+            }
+        });
     }
 }

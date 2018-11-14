@@ -33,7 +33,11 @@ public class Geolocalizacao {
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()){
                         local = (Location) task.getResult();
-                        listener.onLocalizacaoEncontrada(local);
+                        if(local != null){
+                            listener.onLocalizacaoEncontrada(local);
+                        } else {
+                            listener.onFalhaEncontrarLocalizacao();
+                        }
                     }
                 }
             });
@@ -52,6 +56,7 @@ public class Geolocalizacao {
 
     public interface GeolocalizacaoListener {
         void onLocalizacaoEncontrada(Location local);
+        void onFalhaEncontrarLocalizacao();
     }
 
     public Geolocalizacao setListener(GeolocalizacaoListener listener) {

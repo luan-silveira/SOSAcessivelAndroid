@@ -149,6 +149,12 @@
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/layoutMapaLocalizacaoDetalhes">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,6 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 tools:context=".MapsDetalheOcorrenciaActivity" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -80,12 +80,17 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLng coordenadas = null;
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        LatLng coordenadas = new LatLng(ocorrencia.getLatitude(), ocorrencia.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 16));
-        mMap.addMarker(new MarkerOptions().position(coordenadas));
+        if(ocorrencia.getLatitude() != null && ocorrencia.getLongitude() == null) {
+            coordenadas = new LatLng(ocorrencia.getLatitude(), ocorrencia.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 16));
+            mMap.addMarker(new MarkerOptions().position(coordenadas));
+        } else {
+            (findViewById(R.id.layoutMapaLocalizacaoDetalhes)).setVisibility(View.GONE);
+        }
     }
 
     @Override
