@@ -41,6 +41,7 @@ import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.ArrayAdapterOcorrenciaPre;
 import br.com.luansilveira.sosacessvel.utils.Geolocalizacao;
 import br.com.luansilveira.sosacessvel.utils.Notify;
+import br.com.luansilveira.sosacessvel.utils.Permissoes;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         TextView txtNomeUsuario = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_nome_usuario);
 
 
-        this.solicitarPermissoes();
+        Permissoes.solicitarPermissoes(this);
 
         try {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -179,13 +180,6 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -229,26 +223,6 @@ public class MainActivity extends AppCompatActivity
 
     public void novaOcorrenciaClick(View view) {
         startActivity(new Intent(this, OcorrenciaActivity.class));
-    }
-
-    public void solicitarPermissoes(){
-        ArrayList<String> permissoesRequisitar = new ArrayList<>();
-        String[] permissoesRequisitarArray = new String[]{};
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            permissoesRequisitar.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            permissoesRequisitar.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        if (!permissoesRequisitar.isEmpty()) {
-            ActivityCompat.requestPermissions(this,
-                    permissoesRequisitar.toArray(permissoesRequisitarArray), 1);
-        }
     }
 
     public void ocorrenciaPreCadastradaClick(View view) {

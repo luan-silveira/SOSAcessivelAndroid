@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,12 +54,12 @@ import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.Geolocalizacao;
+import br.com.luansilveira.sosacessvel.utils.Permissoes;
 
 public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Spinner spClassifOcorrencias;
     Spinner spTipoOcorrencias;
-    TextView txtLocalizacao;
     TextView txtInsituicao;
     EditText edDescricaoOcorrencia;
     EditText edDescricaoLocalizacao;
@@ -76,6 +77,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocation;
     private Location local;
+    private Marker marcador;
 
     private Geolocalizacao geolocalizacao;
 
@@ -99,7 +101,6 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
         spClassifOcorrencias = findViewById(R.id.classifOcorrencias);
         spTipoOcorrencias = findViewById(R.id.tipoOcorrencias);
-        txtLocalizacao = findViewById(R.id.txtLocalizacao);
         txtInsituicao = findViewById(R.id.orgao_instituicao);
         edDescricaoOcorrencia = findViewById(R.id.edDescricaoOcorrencia);
         edDescricaoLocalizacao = findViewById(R.id.edDescricaoLocal);
@@ -161,7 +162,27 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             e.printStackTrace();
         }
 
-        if(!this.cadastrarOcorrencia && geolocalizacao.isPermissaoLocalizacao()) getLocalizacao();
+        if(!this.cadastrarOcorrencia){
+            if(Permissoes.isPermissaoLocalizacao(this)){
+                getLocalizacao();
+            } else {
+                new AlertDialog.Builder(OcorrenciaActivity.this)
+                        .setTitle("Permissão para localização")
+                        .setMessage("O aplicativo não possui permissões de acesso à localização.\n" +
+                                "Gostaria de solicitar agora?")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Permissoes.solicitarPermissoes(OcorrenciaActivity.this);
+                            }
+                        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        }
 
         if(ocorrencia != null) this.popularCampos();
 
@@ -207,12 +228,10 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onLocalizacaoEncontrada(Location local) {
                 OcorrenciaActivity.this.local = local;
-                txtLocalizacao.setText("Localização atual: " + String.valueOf(local.getLatitude())
-                        + ", " + String.valueOf(local.getLongitude()));
 
                 LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
-                map.addMarker(new MarkerOptions().position(coordenadas));
+                marcador = map.addMarker(new MarkerOptions().position(coordenadas));
             }
 
             @Override
@@ -329,13 +348,37 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setCompassEnabled(true);
-        map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                geolocalizacao.getLocalizacao();
-                return true;
+
+        try{
+            if(Permissoes.isPermissaoLocalizacao(OcorrenciaActivity.this)){
+                map.setMyLocationEnabled(true);
+                map.getUiSettings().setZoomControlsEnabled(true);
+                map.getUiSettings().setScrollGesturesEnabled(true);
+                map.getUiSettings().setMyLocationButtonEnabled(true);
+                map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        local = map.getMyLocation();
+                        if(local != null) {
+                            LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
+                            if (marcador == null){
+                               marcador = map.addMarker(new MarkerOptions().position(coordenadas));
+                            } else {
+                                marcador.setPosition(coordenadas);
+                            }
+                        }
+                        return true;
+                    }
+                });
+            } else {
+                map.setMyLocationEnabled(false);
+                map.getUiSettings().setMyLocationButtonEnabled(true);
             }
-        });
+        } catch (SecurityException e){
+
+        }
     }
+
+
 }

@@ -37,6 +37,8 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_detalhe_ocorrencia);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        ocorrencia = (Ocorrencia) getIntent().getExtras().getSerializable("ocorrencia");
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -47,7 +49,6 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         actionBar.setHomeButtonEnabled(true);
         this.carregarObjetos();
 
-        ocorrencia = (Ocorrencia) getIntent().getExtras().getSerializable("ocorrencia");
 
         LinearLayout layoutAtendimento = findViewById(R.id.layoutAtendimentoOcorrencia);
 
@@ -84,7 +85,7 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        if(ocorrencia.getLatitude() != null && ocorrencia.getLongitude() == null) {
+        if(ocorrencia.getLatitude() != null && ocorrencia.getLongitude() != null) {
             coordenadas = new LatLng(ocorrencia.getLatitude(), ocorrencia.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 16));
             mMap.addMarker(new MarkerOptions().position(coordenadas));

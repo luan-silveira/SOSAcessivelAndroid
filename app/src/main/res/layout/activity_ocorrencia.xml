@@ -68,10 +68,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/layoutLocalizacao">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtLocalizacao"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginTop="10dp"
                 android:text="Localização atual:"/>
 
             <fragment

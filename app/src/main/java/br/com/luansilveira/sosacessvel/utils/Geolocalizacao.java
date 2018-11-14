@@ -27,12 +27,12 @@ public class Geolocalizacao {
         FusedLocationProviderClient fusedLocation = LocationServices.getFusedLocationProviderClient(context);
 
         try {
-            final Task localizacao = fusedLocation.getLastLocation();
-            localizacao.addOnCompleteListener(new OnCompleteListener() {
+            final Task<Location> localizacao = fusedLocation.getLastLocation();
+            localizacao.addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
-                public void onComplete(@NonNull Task task) {
+                public void onComplete(@NonNull Task<Location> task) {
                     if(task.isSuccessful()){
-                        local = (Location) task.getResult();
+                        local = task.getResult();
                         if(local != null){
                             listener.onLocalizacaoEncontrada(local);
                         } else {
@@ -45,13 +45,6 @@ public class Geolocalizacao {
         } catch (SecurityException e) {
             Log.e("Exception", e.getMessage());
         }
-    }
-
-    public boolean isPermissaoLocalizacao(){
-        return ((ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED));
     }
 
     public interface GeolocalizacaoListener {
