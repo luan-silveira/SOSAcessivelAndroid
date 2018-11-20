@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     protected OcorrenciaController ocorrenciaCtrl;
     protected InstituicaoController instituicaoCtrl;
     protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
+    protected Notify notify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("SOS Acessível");
         setSupportActionBar(toolbar);
+
+        notify = new Notify(this);
+        notify.criarCanalNotificacao("notificacoes_emergenciais", "Notificações emergenciais", notify.getManager().IMPORTANCE_DEFAULT);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -121,9 +125,10 @@ public class MainActivity extends AppCompatActivity
                                                 + " alterada.", Toast.LENGTH_LONG).show();*/
                                         Intent intent = new Intent(MainActivity.this, MapsDetalheOcorrenciaActivity.class);
                                         intent.putExtra("ocorrencia", ocorrencia);
-                                        Notify.criarNotificacao(MainActivity.this, intent, R.drawable.ic_notificacao_emergencia,
+                                        notify.criarNotificacao(intent, R.drawable.ic_notificacao_emergencia,
                                                 "Ocorrência atendida",
-                                                "A ocorrência foi atendida.");
+                                                "A ocorrência foi atendida.",
+                                                "notificacoes_emergenciais");
                                     }
                                 } catch (SQLException e) {
                                     Toast.makeText(MainActivity.this, "Erro de sincronização", Toast.LENGTH_LONG).show();
