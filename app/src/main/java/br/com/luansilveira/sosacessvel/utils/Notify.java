@@ -7,13 +7,21 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 /**
  * Classe utilizada para implementar notificações no Android.
  */
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class Notify {
+
+    public static final int IMPORTANCE_DEFAULT = NotificationManager.IMPORTANCE_DEFAULT;
+    public static final int IMPORTANCE_LOW = NotificationManager.IMPORTANCE_LOW;
+    public static final int IMPORTANCE_HIGH = NotificationManager.IMPORTANCE_HIGH;
+    public static final int IMPORTANCE_MIN = NotificationManager.IMPORTANCE_MIN;
+    public static final int IMPORTANCE_MAX = NotificationManager.IMPORTANCE_MAX;
 
     private NotificationManager manager;
     private Context context;

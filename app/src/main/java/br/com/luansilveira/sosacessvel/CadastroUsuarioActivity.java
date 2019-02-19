@@ -9,15 +9,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import br.com.luansilveira.sosacessvel.Controller.ApiController.UsuarioApiController;
 import br.com.luansilveira.sosacessvel.Controller.UsuarioController;
 import br.com.luansilveira.sosacessvel.Enum.Rh;
 import br.com.luansilveira.sosacessvel.Enum.TipoSanguineo;
-import br.com.luansilveira.sosacessvel.FirebaseController.UserFirebaseController;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 import br.com.luansilveira.sosacessvel.utils.DB;
 import br.com.luansilveira.sosacessvel.utils.MaskEditUtil;
@@ -25,6 +26,7 @@ import br.com.luansilveira.sosacessvel.utils.MaskEditUtil;
 public class CadastroUsuarioActivity extends AppCompatActivity {
     protected UsuarioController crud;
     protected boolean editarUsuario;
+    protected UsuarioApiController api = new UsuarioApiController(this);
 
     protected String key;
 
@@ -85,16 +87,17 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 if (retorno == -1) {
                     Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
                 } else {
-                    UserFirebaseController.update(usuario);
+                    api.create(usuario);
                     Toast.makeText(this, "Usuário alterado!", Toast.LENGTH_LONG).show();
                     finish();
                 }
             } else {
-                UserFirebaseController.save(usuario);
+                usuario.setKey(this.gerarToken());
                 long retorno = crud.create(usuario);
                 if (retorno == -1) {
                     Toast.makeText(this, "Erro ao gravar os dados!", Toast.LENGTH_LONG).show();
                 } else {
+                    api.create(usuario);
                     (new DB(getBaseContext())).execSQLFromFile(R.raw.sos_acessivel_sql);
                     abrirTelaInicial();
                 }
@@ -194,5 +197,17 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private String gerarToken(){
+        final int len = 30;
+
+        final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        SecureRandom rnd = new SecureRandom();
+
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
     }
 }
