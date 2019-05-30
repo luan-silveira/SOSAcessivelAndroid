@@ -5,10 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 
-import br.com.luansilveira.sosacessvel.Annotations.Coluna;
-import br.com.luansilveira.sosacessvel.Annotations.PrimaryKey;
-import br.com.luansilveira.sosacessvel.Annotations.Tabela;
-
 @DatabaseTable(tableName = "classificacao_ocorrencia")
 public class ClassificacaoOcorrencia implements Serializable {
 
