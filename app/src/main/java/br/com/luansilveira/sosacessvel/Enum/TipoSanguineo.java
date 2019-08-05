@@ -4,5 +4,5 @@ public enum TipoSanguineo {
     A,
     B,
     AB,
-    O;
+    O
 }

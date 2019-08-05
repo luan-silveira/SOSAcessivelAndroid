@@ -24,6 +24,6 @@ public class UsuarioController extends BaseDaoImpl<Usuario, Integer> {
     }
 
     public boolean existeUsuario() throws SQLException {
-        return  (this.queryForAll().size() > 0);
+        return (this.queryForAll().size() > 0);
     }
 }

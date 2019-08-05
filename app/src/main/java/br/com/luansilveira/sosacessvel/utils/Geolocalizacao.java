@@ -1,12 +1,10 @@
 package br.com.luansilveira.sosacessvel.utils;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,7 +21,7 @@ public class Geolocalizacao {
         this.context = context;
     }
 
-    public void getLocalizacao(){
+    public void getLocalizacao() {
         FusedLocationProviderClient fusedLocation = LocationServices.getFusedLocationProviderClient(context);
 
         try {
@@ -31,9 +29,9 @@ public class Geolocalizacao {
             localizacao.addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         local = task.getResult();
-                        if(local != null){
+                        if (local != null) {
                             listener.onLocalizacaoEncontrada(local);
                         } else {
                             listener.onFalhaEncontrarLocalizacao();
@@ -47,14 +45,15 @@ public class Geolocalizacao {
         }
     }
 
-    public interface GeolocalizacaoListener {
-        void onLocalizacaoEncontrada(Location local);
-        void onFalhaEncontrarLocalizacao();
-    }
-
     public Geolocalizacao setListener(GeolocalizacaoListener listener) {
         this.listener = listener;
 
         return this;
+    }
+
+    public interface GeolocalizacaoListener {
+        void onLocalizacaoEncontrada(Location local);
+
+        void onFalhaEncontrarLocalizacao();
     }
 }

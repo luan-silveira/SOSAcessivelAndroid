@@ -1,13 +1,14 @@
 package br.com.luansilveira.sosacessvel.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +33,14 @@ public class ArrayAdapterOcorrenciaPre extends ArrayAdapter<OcorrenciaPreCadastr
         OcorrenciaPreCadastrada ocorrencia = lista.get(position);
 
         convertView = LayoutInflater.from(this.context).inflate(R.layout.listview_ocorrencia_pre, null);
-        TextView txtDescricao = (TextView) convertView.findViewById(R.id.txtDescricaoOcorrencia);
-        TextView txtTipo = (TextView) convertView.findViewById(R.id.txtTipoOcorrencia);
+        TextView txtDescricao = convertView.findViewById(R.id.txtDescricaoOcorrencia);
+        TextView txtTipo = convertView.findViewById(R.id.txtTipoOcorrencia);
 
         txtDescricao.setText(ocorrencia.getId() + ". " +
                 ocorrencia.getDescricao() == null || ocorrencia.getDescricao().trim().isEmpty() ?
                 "<sem descrição>" : ocorrencia.getDescricao());
         txtTipo.setText(ocorrencia.getTipoOcorrencia().getClassificacaoOcorrencia().getId()
-            + "." + ocorrencia.getTipoOcorrencia().getId() + " - " + ocorrencia.getTipoOcorrencia().toString());
+                + "." + ocorrencia.getTipoOcorrencia().getId() + " - " + ocorrencia.getTipoOcorrencia().toString());
 
         return convertView;
     }

@@ -1,6 +1,6 @@
 package br.com.luansilveira.sosacessvel.Model;
+
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -48,8 +48,7 @@ public class Ocorrencia implements Serializable {
     }
 
     public Ocorrencia(String key, Usuario usuario, TipoOcorrencia tipoOcorrencia, String descricao,
-                      String localizacao, Double latitude, Double longitude, String dataOcorrencia)
-    {
+                      String localizacao, Double latitude, Double longitude, String dataOcorrencia) {
         this.key = key;
         this.usuario = usuario;
         this.tipoOcorrencia = tipoOcorrencia;
@@ -61,8 +60,7 @@ public class Ocorrencia implements Serializable {
     }
 
     public Ocorrencia(Usuario usuario, TipoOcorrencia tipoOcorrencia, String descricao,
-                      String localizacao, Double latitude, Double longitude)
-    {
+                      String localizacao, Double latitude, Double longitude) {
         this.usuario = usuario;
         this.tipoOcorrencia = tipoOcorrencia;
         this.descricao = descricao;
@@ -146,7 +144,7 @@ public class Ocorrencia implements Serializable {
             if ((!dataOcorrencia.trim().isEmpty()) && (dataOcorrencia != null)) {
                 data = dateFormat.parse(dataOcorrencia);
             }
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             this.dataOcorrencia = dateFormat.format(data);
@@ -163,7 +161,7 @@ public class Ocorrencia implements Serializable {
             if ((!dataAtendimento.trim().isEmpty()) && (dataAtendimento != null)) {
                 data = dateFormat.parse(dataAtendimento);
             }
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             this.dataAtendimento = dateFormat.format(data);
@@ -174,9 +172,13 @@ public class Ocorrencia implements Serializable {
         return status;
     }
 
-    public String getDescricaoStatus(){
-        String status = new String();
-        switch(this.status){
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getDescricaoStatus() {
+        String status = "";
+        switch (this.status) {
             case 0:
                 status = "Pendente";
                 break;
@@ -189,10 +191,6 @@ public class Ocorrencia implements Serializable {
         }
 
         return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public InstituicaoAtendimento getInstituicao() {
@@ -211,13 +209,13 @@ public class Ocorrencia implements Serializable {
         this.mensagemAtendente = mensagemAtendente;
     }
 
-    public boolean isEnviadoFirebase(){
+    public boolean isEnviadoFirebase() {
         return (this.key != null);
     }
 
 
     public String getDescricaoTipoOcorrencia() {
-        return tipoOcorrencia.getClassificacaoOcorrencia().getId() + "." +  tipoOcorrencia.getId()
+        return tipoOcorrencia.getClassificacaoOcorrencia().getId() + "." + tipoOcorrencia.getId()
                 + " - " + tipoOcorrencia.getDescricao();
     }
 

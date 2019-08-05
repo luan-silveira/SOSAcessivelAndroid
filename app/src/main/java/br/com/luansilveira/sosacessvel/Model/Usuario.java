@@ -69,12 +69,12 @@ public class Usuario implements Serializable {
         return dataNascimento;
     }
 
-    public String getDataNascimentoString() {
-        return (new SimpleDateFormat("dd/MM/yyyy")).format(dataNascimento);
-    }
-
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public String getDataNascimentoString() {
+        return (new SimpleDateFormat("dd/MM/yyyy")).format(dataNascimento);
     }
 
     public void setDataNascimentoString(String dataNascimento) {
@@ -89,12 +89,12 @@ public class Usuario implements Serializable {
         return tipoSanguineo;
     }
 
-    public void setTipo(TipoSanguineo tipoSanguineo) {
-        this.tipoSanguineo = tipoSanguineo;
-    }
-
     public void setTipoSanguineo(String tipoSanguineo) {
         this.tipoSanguineo = TipoSanguineo.valueOf(tipoSanguineo);
+    }
+
+    public void setTipo(TipoSanguineo tipoSanguineo) {
+        this.tipoSanguineo = tipoSanguineo;
     }
 
     public Rh getRhSanguineo() {

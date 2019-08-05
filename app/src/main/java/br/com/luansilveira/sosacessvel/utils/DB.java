@@ -20,7 +20,7 @@ import br.com.luansilveira.sosacessvel.Model.OcorrenciaPreCadastrada;
 import br.com.luansilveira.sosacessvel.Model.TipoOcorrencia;
 import br.com.luansilveira.sosacessvel.Model.Usuario;
 
-public class DB extends OrmLiteSqliteOpenHelper{
+public class DB extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NOME = "sos_acessivel";
     private static final int DB_VERSAO = 1;
@@ -51,7 +51,6 @@ public class DB extends OrmLiteSqliteOpenHelper{
     }
 
 
-
     public int execSQLFromFile(int resourceId) throws IOException {
         int result = 0;
         StringBuilder SQL = new StringBuilder();
@@ -62,7 +61,7 @@ public class DB extends OrmLiteSqliteOpenHelper{
         while (insertReader.ready()) {
             String linha = insertReader.readLine();
             SQL.append(linha + " ");
-            if(linha.indexOf(';') > -1){
+            if (linha.indexOf(';') > -1) {
                 getWritableDatabase().execSQL(SQL.toString());
                 SQL.setLength(0);
                 result++;

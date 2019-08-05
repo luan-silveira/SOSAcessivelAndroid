@@ -5,7 +5,6 @@ import android.content.Context;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.stmt.PreparedQuery;
 
 import java.sql.SQLException;
 import java.util.List;

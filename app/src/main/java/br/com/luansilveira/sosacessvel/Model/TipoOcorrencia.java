@@ -26,24 +26,24 @@ public class TipoOcorrencia implements Serializable {
         this.classificacao = classificacao;
     }
 
-    public Integer getId(){
+    public Integer getId() {
         return this.id;
-    }
-
-    public String getDescricao() {
-        return this.descricao;
-    }
-
-    public ClassificacaoOcorrencia getClassificacaoOcorrencia() {
-        return classificacao;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
+    public String getDescricao() {
+        return this.descricao;
+    }
+
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public ClassificacaoOcorrencia getClassificacaoOcorrencia() {
+        return classificacao;
     }
 
     public void setClassificacaoOcorrencia(ClassificacaoOcorrencia classificacao) {
@@ -54,9 +54,13 @@ public class TipoOcorrencia implements Serializable {
         return idInstituicaoOrgao;
     }
 
-    public String getNomeInstituicao(){
-        String instituicao = new String();
-        switch (idInstituicaoOrgao){
+    public void setIdInstituicaoOrgao(Integer idInstituicaoOrgao) {
+        this.idInstituicaoOrgao = idInstituicaoOrgao;
+    }
+
+    public String getNomeInstituicao() {
+        String instituicao = "";
+        switch (idInstituicaoOrgao) {
             case 1:
                 instituicao = "Corpo de Bombeiros Militar";
                 break;
@@ -69,10 +73,6 @@ public class TipoOcorrencia implements Serializable {
         }
 
         return instituicao;
-    }
-
-    public void setIdInstituicaoOrgao(Integer idInstituicaoOrgao) {
-        this.idInstituicaoOrgao = idInstituicaoOrgao;
     }
 
     @Override

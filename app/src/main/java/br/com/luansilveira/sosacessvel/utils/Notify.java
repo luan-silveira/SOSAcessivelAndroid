@@ -1,5 +1,6 @@
 package br.com.luansilveira.sosacessvel.utils;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,8 +8,9 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 /**
  * Classe utilizada para implementar notificações no Android.
@@ -20,7 +22,7 @@ public class Notify {
 
     public Notify(Context context) {
         this.context = context;
-        this.manager =  (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        this.manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     /**
@@ -31,17 +33,21 @@ public class Notify {
      * @param title
      * @param text
      */
-    public void criarNotificacao(Intent contentIntent, int icon, CharSequence title, CharSequence text){
+    public void criarNotificacao(Intent contentIntent, int icon, CharSequence title, CharSequence text) {
         this.criarNotificacao(contentIntent, icon, title, text, null);
     }
 
-    public void criarNotificacao(Intent contentIntent, int icon, CharSequence title, CharSequence text, String id_canal){
+    public void criarNotificacao(Intent contentIntent, int icon, CharSequence title, CharSequence text, String id_canal) {
+        this.criarNotificacao(contentIntent, icon, title, text, id_canal, false);
+    }
+
+    public void criarNotificacao(Intent contentIntent, int icon, CharSequence title, CharSequence text, String id_canal, boolean highPriority) {
         int id = 1;
 
         PendingIntent p = getPendingIntent(id, contentIntent, context);
 
         NotificationCompat.Builder notificacao = null;
-        if(id_canal != null) {
+        if (id_canal != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notificacao = new NotificationCompat.Builder(context, id_canal);
             } else {
@@ -52,6 +58,10 @@ public class Notify {
         notificacao.setContentTitle(title);
         notificacao.setContentText(text);
         notificacao.setContentIntent(p);
+        if (highPriority) {
+            notificacao.setPriority(Notification.PRIORITY_MAX);
+            notificacao.setVibrate(new long[]{250, 250});
+        }
 
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
         nm.notify(id, notificacao.build());
@@ -61,7 +71,7 @@ public class Notify {
         return manager;
     }
 
-    private PendingIntent getPendingIntent(int id, Intent intent, Context context){
+    private PendingIntent getPendingIntent(int id, Intent intent, Context context) {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(intent.getComponent());
         stackBuilder.addNextIntent(intent);
@@ -80,7 +90,7 @@ public class Notify {
      * @return
      */
 
-    public NotificationChannel criarCanalNotificacao(String id, CharSequence nome, int importancia){
+    public NotificationChannel criarCanalNotificacao(String id, CharSequence nome, int importancia) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel canal = new NotificationChannel(id, nome, importancia);
             this.manager.createNotificationChannel(canal);

@@ -1,14 +1,15 @@
 package br.com.luansilveira.sosacessvel;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class ListaOcorrenciasActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -98,7 +99,7 @@ public class ListaOcorrenciasActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void popularListView(){
+    public void popularListView() {
         ArrayAdapterOcorrencia adapterOcorrencia = new ArrayAdapterOcorrencia(ListaOcorrenciasActivity.this, listaOcorrencias);
         listView.setAdapter(adapterOcorrencia);
     }

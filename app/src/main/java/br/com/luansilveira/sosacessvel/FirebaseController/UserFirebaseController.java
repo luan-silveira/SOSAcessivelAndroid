@@ -10,8 +10,8 @@ public abstract class UserFirebaseController {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-    public static String save(final Usuario usuario){
-        String key = new String();
+    public static String save(final Usuario usuario) {
+        String key = "";
         try {
             DatabaseReference dbRef = database.getReference("usuarios").push();
             key = dbRef.getKey();
@@ -24,12 +24,12 @@ public abstract class UserFirebaseController {
         return key;
     }
 
-    public static void update(final Usuario usuario){
+    public static void update(final Usuario usuario) {
         DatabaseReference dbRef = database.getReference("usuarios").child(usuario.getKey());
         dbRef.setValue(usuario);
     }
 
-    public static void delete(final Usuario usuario){
+    public static void delete(final Usuario usuario) {
         DatabaseReference dbRef = database.getReference("usuarios").child(usuario.getKey());
         dbRef.removeValue();
     }

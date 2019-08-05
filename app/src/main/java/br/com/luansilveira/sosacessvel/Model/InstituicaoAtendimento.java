@@ -24,33 +24,33 @@ public class InstituicaoAtendimento implements Serializable {
         this.idInstituicaoOrgao = idInstituicaoOrgao;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setIdInstituicaoOrgao(Integer idInstituicaoOrgao) {
-        this.idInstituicaoOrgao = idInstituicaoOrgao;
-    }
-
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public Integer getIdInstituicaoOrgao() {
         return idInstituicaoOrgao;
     }
 
-    public String getNomeInstituicao(){
-        String instituicao = new String();
-        switch (idInstituicaoOrgao){
+    public void setIdInstituicaoOrgao(Integer idInstituicaoOrgao) {
+        this.idInstituicaoOrgao = idInstituicaoOrgao;
+    }
+
+    public String getNomeInstituicao() {
+        String instituicao = "";
+        switch (idInstituicaoOrgao) {
             case 1:
                 instituicao = "Corpo de Bombeiros Militar";
                 break;

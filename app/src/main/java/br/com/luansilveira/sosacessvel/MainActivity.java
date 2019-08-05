@@ -1,27 +1,24 @@
 package br.com.luansilveira.sosacessvel;
 
-import android.Manifest;
-import android.content.DialogInterface;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,30 +46,31 @@ public class MainActivity extends AppCompatActivity
     protected UsuarioController userCtrl;
     protected OcorrenciaController ocorrenciaCtrl;
     protected InstituicaoController instituicaoCtrl;
-    protected ArrayList<Ocorrencia> listaOcorrencias = new ArrayList<>();
     protected Notify notify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("SOS Acessível");
         setSupportActionBar(toolbar);
 
         notify = new Notify(this);
-        notify.criarCanalNotificacao("notificacoes_emergenciais", "Notificações emergenciais", notify.getManager().IMPORTANCE_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notify.criarCanalNotificacao("notificacoes_emergenciais", "Notificações emergenciais", NotificationManager.IMPORTANCE_HIGH);
+        }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TextView txtNomeUsuario = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_nome_usuario);
+        TextView txtNomeUsuario = navigationView.getHeaderView(0).findViewById(R.id.txt_nome_usuario);
 
 
         Permissoes.solicitarPermissoes(this);
@@ -84,20 +82,22 @@ public class MainActivity extends AppCompatActivity
             instituicaoCtrl = new InstituicaoController(this);
 
             Usuario usuario = userCtrl.getUsuario();
-            String texto = "Usuário: " + usuario.getNome().toString() + " - " + usuario.getTipoSanguineo().toString() +
-                    (usuario.getRhSanguineo().toString() == "P" ? "+" : "-");
+            String texto = "Usuário: " + usuario.getNome() + " - " + usuario.getTipoSanguineo().toString() +
+                    (usuario.getRhSanguineo().toString().equals("P") ? "+" : "-");
             txtNomeUsuario.setText(texto);
 
             database.getReference("usuarios/" + userCtrl.getUsuario().getKey())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             try {
                                 Usuario usuario = dataSnapshot.getValue(Usuario.class);
-                                userCtrl.update(usuario);
+                                if (usuario != null) {
+                                    userCtrl.update(usuario);
 
-                                if(usuario.getIsBloqueado()){
-                                    abrirTelaBloqueio();
+                                    if (usuario.getIsBloqueado()) {
+                                        abrirTelaBloqueio();
+                                    }
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
                     });
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity
                     .addValueEventListener(new ValueEventListener() {
 
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                 try {
                                     Ocorrencia ocorrencia = sincronizarOcorrencia(snapshot);
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                                         notify.criarNotificacao(intent, R.drawable.ic_notificacao_emergencia,
                                                 "Ocorrência atendida",
                                                 "A ocorrência foi atendida.",
-                                                "notificacoes_emergenciais");
+                                                "notificacoes_emergenciais", true);
                                     }
                                 } catch (SQLException e) {
                                     Toast.makeText(MainActivity.this, "Erro de sincronização", Toast.LENGTH_LONG).show();
@@ -139,10 +139,11 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
                     });
 
-            if(userCtrl.getUsuario().getIsBloqueado()){
+            if (userCtrl.getUsuario().getIsBloqueado()) {
                 abrirTelaBloqueio();
             }
 
@@ -154,20 +155,22 @@ public class MainActivity extends AppCompatActivity
 
     public Ocorrencia sincronizarOcorrencia(DataSnapshot dataSnapshot) throws SQLException {
         Ocorrencia ocorrencia = dataSnapshot.getValue(Ocorrencia.class);
-        InstituicaoAtendimento instituicao = ocorrencia.getInstituicao();
+        if (ocorrencia != null) {
+            InstituicaoAtendimento instituicao = ocorrencia.getInstituicao();
 
-        if(instituicao != null){
-            instituicaoCtrl.createIfNotExists(instituicao);
+            if (instituicao != null) {
+                instituicaoCtrl.createIfNotExists(instituicao);
+            }
+
+            if (ocorrenciaCtrl.update(ocorrencia) != 1) return null;
         }
-
-        if(ocorrenciaCtrl.update(ocorrencia) != 1) return null;
 
         return ocorrencia;
     }
 
-    public void abrirTelaBloqueio(){
+    public void abrirTelaBloqueio() {
         Intent intent = new Intent(MainActivity.this, UsuarioBloqueadoActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
         finishAffinity();
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -199,28 +202,27 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.menu_ocorrencias) {
+        if (id == R.id.menu_ocorrencias) {
             startActivity(new Intent(MainActivity.this, ListaOcorrenciasActivity.class));
         }
 
-        if (id == R.id.menuCadastro){
+        if (id == R.id.menuCadastro) {
 
             Intent intent = new Intent(this, CadastroUsuarioActivity.class);
             intent.putExtra("editar_usuario", true);
             startActivity(intent);
         }
 
-        if (id == R.id.menu_ocorrencia_predef){
+        if (id == R.id.menu_ocorrencia_predef) {
             startActivity(new Intent(this, ListaOcorrenciasPreCadastradasActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -236,67 +238,46 @@ public class MainActivity extends AppCompatActivity
             final ArrayAdapterOcorrenciaPre adapter = new ArrayAdapterOcorrenciaPre(this, listaOcorrencias);
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
-            if(listaOcorrencias.size() > 0) {
-                dialog.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final OcorrenciaPreCadastrada ocorrencia = adapter.getItem(which);
+            if (listaOcorrencias.size() > 0) {
+                dialog.setAdapter(adapter, (dialog1, which) -> {
+                    final OcorrenciaPreCadastrada ocorrencia = adapter.getItem(which);
 
-                        AlertDialog.Builder dialogIn = new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Enviar ocorrência")
-                                .setMessage("Deseja realmente enviar esta ocorrência?");
-                        dialogIn.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        dialogIn.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Geolocalizacao geo = new Geolocalizacao(MainActivity.this)
-                                        .setListener(new Geolocalizacao.GeolocalizacaoListener() {
-                                            @Override
-                                            public void onLocalizacaoEncontrada(Location local) {
-                                                enviarOcorrenciaPreCadastrada(ocorrencia, local);
-                                            }
+                    AlertDialog.Builder dialogIn = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Enviar ocorrência")
+                            .setMessage("Deseja realmente enviar esta ocorrência?");
+                    dialogIn.setNegativeButton("Cancelar", (dialog11, which1) -> dialog11.dismiss());
+                    dialogIn.setPositiveButton("OK", (dialog112, which12) -> {
+                        Geolocalizacao geo = new Geolocalizacao(MainActivity.this)
+                                .setListener(new Geolocalizacao.GeolocalizacaoListener() {
+                                    @Override
+                                    public void onLocalizacaoEncontrada(Location local) {
+                                        enviarOcorrenciaPreCadastrada(ocorrencia, local);
+                                    }
 
-                                            @Override
-                                            public void onFalhaEncontrarLocalizacao() {
-                                                (new AlertDialog.Builder(MainActivity.this))
-                                                        .setTitle("Atenção")
-                                                        .setMessage("Não foi possível obter a localização atual. A localização não será enviada." +
-                                                                "\nSendo assim, é de suma importância informar a descrição da localização, ou o endereço, para facilitar no atendimento.")
-                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                enviarOcorrenciaPreCadastrada(ocorrencia, null);
-                                                            }
-                                                        }).show();
-                                            }
-                                        });
-                                geo.getLocalizacao();
-                            }
-                        });
-                        dialogIn.show();
-                    }
+                                    @Override
+                                    public void onFalhaEncontrarLocalizacao() {
+                                        (new AlertDialog.Builder(MainActivity.this))
+                                                .setTitle("Atenção")
+                                                .setMessage("Não foi possível obter a localização atual. A localização não será enviada." +
+                                                        "\nSendo assim, é de suma importância informar a descrição da localização, ou o endereço, para facilitar no atendimento.")
+                                                .setPositiveButton("OK", (dialog1121, which121) -> enviarOcorrenciaPreCadastrada(ocorrencia, null)).show();
+                                    }
+                                });
+                        geo.getLocalizacao();
+                    });
+                    dialogIn.show();
                 });
             } else {
                 dialog.setMessage("Não há ocorrências pré-cadastradas");
             }
-            dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+            dialog.setNegativeButton("Cancelar", (dialog12, which) -> dialog12.dismiss());
             dialog.show();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void enviarOcorrenciaPreCadastrada(OcorrenciaPreCadastrada ocorrenciaPreCadastrada, Location local){
+    public void enviarOcorrenciaPreCadastrada(OcorrenciaPreCadastrada ocorrenciaPreCadastrada, Location local) {
         try {
             Ocorrencia ocorrencia = new Ocorrencia(
                     userCtrl.getUsuario(),

@@ -1,12 +1,12 @@
 package br.com.luansilveira.sosacessvel;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,7 +43,7 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Detalhes da Ocorrência");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -66,7 +66,6 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         }
 
 
-
     }
 
 
@@ -85,7 +84,7 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        if(ocorrencia.getLatitude() != null && ocorrencia.getLongitude() != null) {
+        if (ocorrencia.getLatitude() != null && ocorrencia.getLongitude() != null) {
             coordenadas = new LatLng(ocorrencia.getLatitude(), ocorrencia.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 16));
             mMap.addMarker(new MarkerOptions().position(coordenadas));
@@ -96,7 +95,7 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -105,15 +104,15 @@ public class MapsDetalheOcorrenciaActivity extends AppCompatActivity implements 
         return super.onOptionsItemSelected(item);
     }
 
-    protected void carregarObjetos(){
-        txtTipoOcorrencia = (TextView) findViewById(R.id.txt_detalhe_tipoOcorrencia);
-        txtClassificacaoOcorrencia = (TextView) findViewById(R.id.txt_detalhe_classificacaoOcorrencia);
-        txtStatus = (TextView) findViewById(R.id.txt_detalhe_status);
-        txtDescricaoOcorrencia = (TextView) findViewById(R.id.txt_detalhe_descricao);
-        txtDescricaoLocalizacao = (TextView) findViewById(R.id.txt_detalhe_desc_localizacao);
-        txtInstituicaoAtendimento = (TextView) findViewById(R.id.txt_instituicao_atendimento);
-        txtDataAtendimento = (TextView) findViewById(R.id.txt_dataAtendimento);
-        txtMensagemAtendente = (TextView) findViewById(R.id.txt_detalhe_mensagemAtendente);
+    protected void carregarObjetos() {
+        txtTipoOcorrencia = findViewById(R.id.txt_detalhe_tipoOcorrencia);
+        txtClassificacaoOcorrencia = findViewById(R.id.txt_detalhe_classificacaoOcorrencia);
+        txtStatus = findViewById(R.id.txt_detalhe_status);
+        txtDescricaoOcorrencia = findViewById(R.id.txt_detalhe_descricao);
+        txtDescricaoLocalizacao = findViewById(R.id.txt_detalhe_desc_localizacao);
+        txtInstituicaoAtendimento = findViewById(R.id.txt_instituicao_atendimento);
+        txtDataAtendimento = findViewById(R.id.txt_dataAtendimento);
+        txtMensagemAtendente = findViewById(R.id.txt_detalhe_mensagemAtendente);
     }
 
 }

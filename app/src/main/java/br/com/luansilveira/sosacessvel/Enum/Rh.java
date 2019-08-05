@@ -7,7 +7,7 @@ public enum Rh {
 
     private String descricao;
 
-    Rh(String descricao){
+    Rh(String descricao) {
         this.descricao = descricao;
     }
 

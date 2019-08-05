@@ -13,7 +13,8 @@ public class ClassificacaoOcorrencia implements Serializable {
     @DatabaseField
     private String descricao;
 
-    public ClassificacaoOcorrencia() {}
+    public ClassificacaoOcorrencia() {
+    }
 
     public ClassificacaoOcorrencia(Integer id, String descricao) {
         this.id = id;
@@ -24,12 +25,12 @@ public class ClassificacaoOcorrencia implements Serializable {
         return id;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 
     public void setDescricao(String descricao) {

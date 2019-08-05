@@ -1,18 +1,8 @@
 package br.com.luansilveira.sosacessvel;
 
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,13 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,11 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -97,7 +86,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
         cadastrarOcorrencia = this.getIntent().getBooleanExtra("cadastrarOcorrencia", false);
         ocorrencia = (OcorrenciaPreCadastrada) this.getIntent().getSerializableExtra("ocorrencia");
-        if(ocorrencia != null) cadastrarOcorrencia = true;
+        if (ocorrencia != null) cadastrarOcorrencia = true;
 
         spClassifOcorrencias = findViewById(R.id.classifOcorrencias);
         spTipoOcorrencias = findViewById(R.id.tipoOcorrencias);
@@ -111,9 +100,9 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         Button btSolicitarAtendimento = findViewById(R.id.btSolicitarAtendimento);
         Button btCadastrarOcorrencia = findViewById(R.id.btCadastrarOcorrencia);
 
-        if(ocorrencia != null) cadastrarOcorrencia = true;
+        if (ocorrencia != null) cadastrarOcorrencia = true;
 
-        if(this.cadastrarOcorrencia){
+        if (this.cadastrarOcorrencia) {
             layoutLocalizacao.setVisibility(View.GONE);
             btSolicitarAtendimento.setVisibility(View.GONE);
         } else {
@@ -145,7 +134,8 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
             spTipoOcorrencias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -156,44 +146,36 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if(!this.cadastrarOcorrencia){
-            if(Permissoes.isPermissaoLocalizacao(this)){
+        if (!this.cadastrarOcorrencia) {
+            if (Permissoes.isPermissaoLocalizacao(this)) {
                 getLocalizacao();
             } else {
                 new AlertDialog.Builder(OcorrenciaActivity.this)
                         .setTitle("Permissão para localização")
                         .setMessage("O aplicativo não possui permissões de acesso à localização.\n" +
-                                "Gostaria de solicitar agora?")
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Permissoes.solicitarPermissoes(OcorrenciaActivity.this);
-                            }
-                        }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                                "Gostaria de solicitar agora?").setCancelable(false)
+                        .setPositiveButton("Sim", (dialog, which) -> Permissoes.solicitarPermissoes(OcorrenciaActivity.this))
+                        .setNegativeButton("Não", (dialog, which) -> dialog.dismiss()).show();
             }
         }
 
-        if(ocorrencia != null) this.popularCampos();
+        if (ocorrencia != null) this.popularCampos();
 
     }
 
-    private boolean validarDescricaoOcorrencia(){
+    private boolean validarDescricaoOcorrencia() {
         boolean ok = true;
 
-        if(tipoOcorrenciaSelecionado.getDescricao().equals("Outros")){
+        if (tipoOcorrenciaSelecionado.getDescricao().equals("Outros")) {
             ok = !(edDescricaoOcorrencia.getText().toString().trim().isEmpty());
-            if (!ok){
+            if (!ok) {
                 edDescricaoOcorrencia.setError(getString(R.string.erroDescricaoOcorrenciaObrigatoria));
                 edDescricaoOcorrencia.requestFocus();
             }
@@ -202,7 +184,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         return ok;
     }
 
-    protected void popularSpinner(Spinner spinner, List<?> lista){
+    protected void popularSpinner(Spinner spinner, List<?> lista) {
 
         ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista.toArray());
 
@@ -212,7 +194,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -222,7 +204,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
-    protected void getLocalizacao(){
+    protected void getLocalizacao() {
 
         geolocalizacao.setListener(new Geolocalizacao.GeolocalizacaoListener() {
             @Override
@@ -246,7 +228,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void solicitarAtendimentoClick(View view) {
-        if(!validarDescricaoOcorrencia()) return;
+        if (!validarDescricaoOcorrencia()) return;
 
         try {
             Usuario usuario = usuarioController.getUsuario();
@@ -262,15 +244,9 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             final Ocorrencia ocorr = ocorrencia;
 
             (new AlertDialog.Builder(this))
-            .setTitle("Ocorrência solicitada")
+                    .setTitle("Ocorrência solicitada")
                     .setMessage("A ocorrência foi enviada para central.\r\nAguarde o atendimento.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            abrirTelaDetalhesOcorrencia(ocorr);
-                        }
-                    }).create().show();
+                    .setPositiveButton("OK", (dialog, which) -> abrirTelaDetalhesOcorrencia(ocorr)).create().show();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -278,7 +254,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
 
     }
 
-    private void abrirTelaDetalhesOcorrencia(Ocorrencia ocorrencia){
+    private void abrirTelaDetalhesOcorrencia(Ocorrencia ocorrencia) {
         Intent intent = new Intent(this, MapsDetalheOcorrenciaActivity.class)
                 .putExtra("ocorrencia", ocorrencia);
         startActivity(intent);
@@ -286,7 +262,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void cadastrarOcorrenciaClick(View view) {
-        if(!validarDescricaoOcorrencia()) return;
+        if (!validarDescricaoOcorrencia()) return;
 
         try {
             Usuario usuario = usuarioController.getUsuario();
@@ -296,7 +272,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             OcorrenciaPreCadastrada ocorrencia = new OcorrenciaPreCadastrada(tipoOcorrenciaSelecionado, descricaoOcorrencia,
                     descricaoLocalizacao);
 
-            if(this.ocorrencia != null){
+            if (this.ocorrencia != null) {
                 ocorrencia.setId(this.ocorrencia.getId());
                 ocorrenciaPreCadastradaController.update(ocorrencia);
 
@@ -310,12 +286,12 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
             startActivity(new Intent(this, ListaOcorrenciasPreCadastradasActivity.class));
             finish();
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void popularCampos(){
+    private void popularCampos() {
         edDescricaoOcorrencia.setText(ocorrencia.getDescricao());
         edDescricaoLocalizacao.setText(ocorrencia.getLocalizacao());
         tipoOcorrenciaSelecionado = ocorrencia.getTipoOcorrencia();
@@ -323,7 +299,7 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         this.selecionarCampo(spTipoOcorrencias, tipoOcorrenciaSelecionado);
     }
 
-    private void selecionarCampo(Spinner spinner, Object data){
+    private void selecionarCampo(Spinner spinner, Object data) {
 
         try {
             for (int id = 0; id < spinner.getCount(); id++) {
@@ -349,33 +325,30 @@ public class OcorrenciaActivity extends AppCompatActivity implements OnMapReadyC
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setCompassEnabled(true);
 
-        try{
-            if(Permissoes.isPermissaoLocalizacao(OcorrenciaActivity.this)){
+        try {
+            if (Permissoes.isPermissaoLocalizacao(OcorrenciaActivity.this)) {
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setZoomControlsEnabled(true);
                 map.getUiSettings().setScrollGesturesEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
-                map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-                    @Override
-                    public boolean onMyLocationButtonClick() {
-                        local = map.getMyLocation();
-                        if(local != null) {
-                            LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
-                            if (marcador == null){
-                               marcador = map.addMarker(new MarkerOptions().position(coordenadas));
-                            } else {
-                                marcador.setPosition(coordenadas);
-                            }
+                map.setOnMyLocationButtonClickListener(() -> {
+                    local = map.getMyLocation();
+                    if (local != null) {
+                        LatLng coordenadas = new LatLng(local.getLatitude(), local.getLongitude());
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas, 15));
+                        if (marcador == null) {
+                            marcador = map.addMarker(new MarkerOptions().position(coordenadas));
+                        } else {
+                            marcador.setPosition(coordenadas);
                         }
-                        return true;
                     }
+                    return true;
                 });
             } else {
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
             }
-        } catch (SecurityException e){
+        } catch (SecurityException e) {
 
         }
     }
