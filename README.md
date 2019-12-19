@@ -1,6 +1,8 @@
 # SOS Acessível
+Aplicação mobile Android do projeto SOS Acessível. Criado e desenvolvido por Luan Christian Nascimento da Silveira.
 
-Protótipo de aplicação para apoio a comunicação dos deficientes auditivos com os serviços de atendimento de emergências.
-Este protótipo está sendo desenvolvido como Trabalho de Conclusão de Curso da Escola Superior de Criciúma (ESUCRI), do curso de Sistemas de Informação.
+Projeto desenvolvido como Trabalho de Conclusão de Curso de graduação em Sistemas de Informação, pela Escola Superior de Criciúma/SC (Faculdades Esucri).
 
-Esta aplicação corresponde ao módulo mobile do protótipo.
+Consiste em um protótipo de aplicação para promover o acesso a pessoas com deficiência auditiva a serviços de chamadas de emergência, tais como Corpo de Bombeiros, Polícia Militar e Serviço de atendimento Móvel de Urgência. 
+
+Esta é a versão mobile do projeto, no qual seria desenvolvido para os usuários finais que possuem deficiência auditiva.
